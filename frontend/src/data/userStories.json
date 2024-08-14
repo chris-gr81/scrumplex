@@ -1,0 +1,26 @@
+[
+    {
+        "usId": 1,
+        "title": "Scrumplex",
+        "role": "Als Initiator",
+        "aim": "möchte ich ein interessantes Projekt erstellen",
+        "benefit": "um mich in Webtechniken einzuarbeiten",
+        "dod": "Ein fertiges Projekt mit Front- und Backend"
+    },
+    {
+        "usId": 2,
+        "title": "UserStory Komponente",
+        "role": "Als ProductOwner",
+        "aim": "möchte ich userStorys verwalten können",
+        "benefit": "um dies angemessen abbilden zu können",
+        "dod": "Funktionalität ist hergestellt"
+    },
+    {
+        "usId": 3,
+        "title": "Login-Funktion",
+        "role": "Als Benutzer",
+        "aim": "möchte ich eine einfache Loginfuktion",
+        "benefit": "um mich einloggen zu können",
+        "dod": "Muss noch besprochen werden"
+    }
+]

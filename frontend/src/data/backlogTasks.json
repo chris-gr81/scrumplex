@@ -1,0 +1,23 @@
+[
+    {
+        "blId":1,
+        "priority": "5",
+        "storyPoints": "8",
+        "sprint": "1",
+        "status": "offen"
+    },
+    {
+        "blId":2,
+        "priority": "4",
+        "storyPoints": "21",
+        "sprint": "2",
+        "status": "offen"
+    },
+    {
+        "blId":3,
+        "priority": "5",
+        "storyPoints": "3",
+        "sprint": "1",
+        "status": "offen"
+    }
+]
