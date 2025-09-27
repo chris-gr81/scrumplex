@@ -1,0 +1,118 @@
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState, type FormEvent } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (isSignUp) {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (signUpError) {
+        console.error("Error signing up:", signUpError.message);
+        return;
+      }
+    } else {
+      const { error: singInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (singInError) {
+        console.error("Error signing in:", singInError.message);
+        return;
+      }
+    }
+  };
+
+  function handleToggleSigning() {
+    setIsSignUp((prev) => !prev);
+  }
+
+  return (
+    <div className={cn("flex flex-col gap-6", className)} {...props}>
+      <Card>
+        <CardHeader>
+          <CardTitle>{isSignUp ? "Account anlegen" : "Einloggen"}</CardTitle>
+          <CardDescription>
+            {isSignUp
+              ? "Melden Sie sich mit einer gülitgen E-Mail-Adresse und einem starken Password an."
+              : "Geben Sie Ihre E-Mail-Adresse und Ihr Password ein, um sich anzumelden."}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-3">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="abc@beispiel.de"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                  {/* placeholder for forgot password feature */}
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-3">
+                <Button type="submit" className="w-full">
+                  {isSignUp ? "Account anlegen" : "Login"}
+                </Button>
+                {/* TODO <Button variant="outline" className="w-full">
+                  Login with GitHub
+                </Button>'*/}
+              </div>
+            </div>
+            <div className="mt-4 text-center text-sm">
+              {isSignUp
+                ? "Sie haben schon einen Account?"
+                : "Sie haben noch keinen Account?"}{" "}
+              <a
+                href="#"
+                className="underline underline-offset-4"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleToggleSigning();
+                }}
+              >
+                {isSignUp ? "Einloggen" : "Account anlegen"}
+              </a>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

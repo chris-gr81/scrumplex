@@ -1,30 +1,24 @@
-import { Sidebar } from "lucide-react";
-import { Outlet } from "react-router";
+import { LoginForm } from "@/components/login-form";
+import { supabase } from "@/lib/supabaseClient";
+import { useEffect, useState, type FormEvent } from "react";
 
 function Root() {
+  const [session, setSession] = useState<any>(null);
+
+  const fetchSession = async () => {
+    const { data } = await supabase.auth.getSession();
+    setSession(data.session);
+    console.log(session);
+  };
+  useEffect(() => {
+    fetchSession();
+  }, []);
+
   return (
-    <main className="flex">
-      <nav>
-        <ul>
-          <li>Erstes</li>
-          <ul className="list-disc pl-5">
-            <li>bla</li>
-            <li>bla</li>
-          </ul>
-          <li>Zweites</li>
-          <ul className="list-disc pl-5">
-            <li>bla</li>
-            <li>bla</li>
-          </ul>
-        </ul>
-      </nav>
-      <div>
-        <header>SCRUMPLEX PRODUCT BACKLOG</header>
-        <main>
-          <Outlet />
-        </main>
-      </div>
-    </main>
+    <div>
+      <h2>{session ? "Eingelogt" : "nicht eingelogt"}</h2>
+      <LoginForm />
+    </div>
   );
 }
 
