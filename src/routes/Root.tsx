@@ -13,7 +13,7 @@ function Root() {
     return <h2>Hallo {profile}</h2>;
   };
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center gap-6 p-4">
       <h2>{session ? "Eingelogt" : "nicht eingelogt"}</h2>
       <button onClick={logout}>Logout</button>
       {renderContent()}
