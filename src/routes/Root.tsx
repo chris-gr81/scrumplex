@@ -1,23 +1,22 @@
 import { LoginForm } from "@/components/login-form";
-import { supabase } from "@/lib/supabaseClient";
-import { useEffect, useState, type FormEvent } from "react";
+import ProfileCard from "@/components/ProfileCard";
+import { useAuth } from "@/contexts/AuthContext";
+import { useProfile } from "@/hooks/useProfile";
 
 function Root() {
-  const [session, setSession] = useState<any>(null);
+  const { session, logout } = useAuth();
+  const profile = useProfile();
 
-  const fetchSession = async () => {
-    const { data } = await supabase.auth.getSession();
-    setSession(data.session);
-    console.log(session);
+  const renderContent = () => {
+    if (!session) return <LoginForm />;
+    if (!profile) return <ProfileCard />;
+    return <h2>Hallo {profile}</h2>;
   };
-  useEffect(() => {
-    fetchSession();
-  }, []);
-
   return (
     <div>
       <h2>{session ? "Eingelogt" : "nicht eingelogt"}</h2>
-      <LoginForm />
+      <button onClick={logout}>Logout</button>
+      {renderContent()}
     </div>
   );
 }

@@ -10,12 +10,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, type FormEvent } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { signIn, signUp } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -24,21 +25,15 @@ export function LoginForm({
     e.preventDefault();
 
     if (isSignUp) {
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      const { error: signUpError } = await signUp(email, password);
       if (signUpError) {
         console.error("Error signing up:", signUpError.message);
         return;
       }
     } else {
-      const { error: singInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (singInError) {
-        console.error("Error signing in:", singInError.message);
+      const { error: signInError } = await signIn(email, password);
+      if (signInError) {
+        console.error("Error signing in:", signInError.message);
         return;
       }
     }
@@ -55,8 +50,8 @@ export function LoginForm({
           <CardTitle>{isSignUp ? "Account anlegen" : "Einloggen"}</CardTitle>
           <CardDescription>
             {isSignUp
-              ? "Melden Sie sich mit einer gülitgen E-Mail-Adresse und einem starken Password an."
-              : "Geben Sie Ihre E-Mail-Adresse und Ihr Password ein, um sich anzumelden."}
+              ? "Melden Sie sich mit einer gültigen E-Mail-Adresse und einem starken Passwort an."
+              : "Geben Sie Ihre E-Mail-Adresse und Ihr Passwort ein, um sich anzumelden."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -92,7 +87,7 @@ export function LoginForm({
                 </Button>
                 {/* TODO <Button variant="outline" className="w-full">
                   Login with GitHub
-                </Button>'*/}
+                </Button> */}
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
