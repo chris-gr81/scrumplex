@@ -13,12 +13,15 @@ type AuthContextValue = {
   signIn: (email: string, password: string) => Promise<any>;
   signUp: (email: string, password: string) => Promise<any>;
   getProfile: (currentId: any) => Promise<any>;
+  profile: any;
+  setProfile: React.Dispatch<React.SetStateAction<any>>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<any>(null);
+  const [profile, setProfile] = useState<any>(null);
 
   /** Load current Supabase session */
   const fetchSession = async () => {
@@ -80,7 +83,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ session, logout, signIn, signUp, getProfile }}
+      value={{
+        session,
+        logout,
+        signIn,
+        signUp,
+        getProfile,
+        profile,
+        setProfile,
+      }}
     >
       {children}
     </AuthContext.Provider>

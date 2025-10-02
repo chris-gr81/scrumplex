@@ -1,9 +1,9 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+import { useEffect } from "react";
 
 export function useProfile() {
-  const { session, getProfile } = useAuth();
-  const [profile, setProfile] = useState<any>(null);
+  const { session, getProfile, profile, setProfile } = useAuth();
 
   useEffect(() => {
     if (!session?.user?.id) {
@@ -18,5 +18,27 @@ export function useProfile() {
     })();
   }, [session?.user?.id]);
 
-  return profile;
+  async function createProfile(
+    firstName: string,
+    lastName: string,
+    id: string
+  ) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .insert([
+        {
+          id: id,
+          first_name: firstName,
+          last_name: lastName,
+          profile_complete: true,
+        },
+      ])
+      .select("*")
+      .single();
+    if (error) return { ok: false, error };
+    setProfile(data);
+    console.log("Profile created: ", profile);
+    return { ok: true, data };
+  }
+  return { profile, createProfile };
 }
