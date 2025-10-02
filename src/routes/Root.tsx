@@ -8,8 +8,12 @@ function Root() {
   const renderContent = () => {
     if (!session) return <LoginForm />;
     if (!profile) return <ProfileCard />;
-
-    return <h2>Hallo User</h2>;
+    console.log("Profile in Root: ", profile);
+    return (
+      <h2>
+        Hallo {profile.first_name} {profile.last_name}
+      </h2>
+    );
   };
   return (
     <div className="flex flex-col items-center justify-center gap-6 p-4">

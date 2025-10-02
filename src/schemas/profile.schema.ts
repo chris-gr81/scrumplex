@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { emailSchema, idSchema, nameSchema } from "./atoms";
+import { idSchema, nameSchema } from "./atoms";
 
 export const ProfileSchema = z.object({
   firstName: nameSchema,
