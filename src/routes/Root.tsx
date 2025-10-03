@@ -1,27 +1,22 @@
-import { LoginForm } from "@/components/login-form";
-import ProfileCard from "@/components/ProfileCard";
 import { useAuth } from "@/contexts/AuthContext";
+import { Navigate, Outlet, useLocation } from "react-router";
 
-function Root() {
-  const { session, logout, profile } = useAuth();
+export default function Root() {
+  const { session, profile } = useAuth();
+  const location = useLocation();
+  console.log(profile);
+  // not loged
+  if (!session && location.pathname !== "/login") {
+    return <Navigate to="/login" replace />;
+  }
 
-  const renderContent = () => {
-    if (!session) return <LoginForm />;
-    if (!profile) return <ProfileCard />;
-    console.log("Profile in Root: ", profile);
-    return (
-      <h2>
-        Hallo {profile.first_name} {profile.last_name}
-      </h2>
-    );
-  };
-  return (
-    <div className="flex flex-col items-center justify-center gap-6 p-4">
-      <h2>{session ? "Eingelogt" : "nicht eingelogt"}</h2>
-      <button onClick={logout}>Logout</button>
-      {renderContent()}
-    </div>
-  );
+  if (session && !profile && location.pathname !== "/onboarding") {
+    return <Navigate to="/onboarding" replace />;
+  }
+
+  if (session && profile && location.pathname !== "/dashboard") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
 }
-
-export default Root;
