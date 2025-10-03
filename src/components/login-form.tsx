@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, type FormEvent } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { AuthSchema } from "@/schemas/auth.schema";
 
 export function LoginForm({
   className,
@@ -24,14 +25,27 @@ export function LoginForm({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const parseResult = AuthSchema.safeParse({
+      email: email,
+      password: password,
+    });
+
+    if (!parseResult.success) {
+      console.error("Validation error: ", parseResult.error);
+      // TODO: Error handling
+      return;
+    }
+
+    const res = parseResult.data;
+
     if (isSignUp) {
-      const { error: signUpError } = await signUp(email, password);
+      const { error: signUpError } = await signUp(res.email, res.password);
       if (signUpError) {
         console.error("Error signing up:", signUpError.message);
         return;
       }
     } else {
-      const { error: signInError } = await signIn(email, password);
+      const { error: signInError } = await signIn(res.email, res.password);
       if (signInError) {
         console.error("Error signing in:", signInError.message);
         return;
