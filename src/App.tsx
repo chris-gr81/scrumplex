@@ -1,11 +1,12 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import Root from "./routes/Root";
-import Home from "./routes/Home";
+import Dashboard from "./routes/Dashboard";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LoginForm } from "./components/login-form";
 import ProfileCard from "./components/ProfileCard";
 import AuthLayout from "./components/AuthLayout";
 import AppLayout from "./components/AppLayout";
+import NewProject from "./components/projects/NewProject";
 
 function App() {
   const router = createBrowserRouter([
@@ -22,7 +23,11 @@ function App() {
         },
         {
           element: <AppLayout />,
-          children: [{ path: "dashboard", element: <Home /> }],
+          children: [
+            { index: true, element: <Navigate to="/dashboard" replace /> },
+            { path: "dashboard", element: <Dashboard /> },
+            { path: "new-project", element: <NewProject /> },
+          ],
         },
       ],
     },

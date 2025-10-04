@@ -14,7 +14,11 @@ export default function Root() {
     return <Navigate to="/onboarding" replace />;
   }
 
-  if (session && profile && location.pathname !== "/dashboard") {
+  if (
+    session &&
+    profile &&
+    (location.pathname === "/" || location.pathname === "")
+  ) {
     return <Navigate to="/dashboard" replace />;
   }
 
