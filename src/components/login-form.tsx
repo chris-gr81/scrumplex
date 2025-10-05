@@ -17,7 +17,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, refreshProfile } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -26,7 +26,7 @@ export function LoginForm({
     e.preventDefault();
 
     const parseResult = AuthSchema.safeParse({
-      email: email,
+      email: email.trim().toLowerCase(),
       password: password,
     });
 
@@ -39,15 +39,17 @@ export function LoginForm({
     const res = parseResult.data;
 
     if (isSignUp) {
-      const { error: signUpError } = await signUp(res.email, res.password);
-      if (signUpError) {
+      try {
+        await signUp(res.email, res.password);
+      } catch (signUpError: any) {
         console.error("Error signing up:", signUpError.message);
         return;
       }
     } else {
-      const { error: signInError } = await signIn(res.email, res.password);
-      if (signInError) {
-        console.error("Error signing in:", signInError.message);
+      try {
+        await signIn(res.email, res.password);
+      } catch (signInError: any) {
+        console.error("Error signing in: ", signInError.message);
         return;
       }
     }

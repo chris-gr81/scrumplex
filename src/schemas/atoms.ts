@@ -29,3 +29,11 @@ export const passwordSchema = z
   .regex(/[a-z]/, { message: "Mindestens ein Kleinbuchstabe" })
   .regex(/[0-9]/, { message: "Mindestens eine Zahl" })
   .regex(/[^A-Za-z0-9]/, { message: "Mindestens ein Sonderzeichen" });
+
+export const timeStampSchema = z
+  .string()
+  .trim()
+  .refine((val) => !val || !isNaN(Date.parse(val)), {
+    message: "Ungültiges Datumsformat",
+  })
+  .optional();

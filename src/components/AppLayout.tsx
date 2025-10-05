@@ -7,7 +7,7 @@ import { ProjectProvider } from "@/contexts/ProjectContext";
 import { getGreeting } from "@/lib/utils";
 
 export function AppLayout() {
-  const { logout, profile } = useAuth();
+  const { logout, auth } = useAuth();
   const navigate = useNavigate();
   const greeting = getGreeting();
 
@@ -47,7 +47,8 @@ export function AppLayout() {
           {/* Dark Topbar */}
           <header className="h-20 bg-zinc-800 border-b border-zinc-600 flex items-center justify-between px-6 text-zinc-200">
             <div className="font-medium tracking-tight">
-              {greeting}, {profile.first_name}!
+              {greeting},{" "}
+              {auth.status === "ready" ? auth.profile.first_name : undefined}!
             </div>
             <div className="flex items-center gap-3">
               <Button

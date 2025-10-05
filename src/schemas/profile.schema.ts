@@ -1,10 +1,18 @@
 import { z } from "zod";
-import { idSchema, nameSchema } from "./atoms";
+import { idSchema, nameSchema, timeStampSchema } from "./atoms";
 
 export const ProfileSchema = z.object({
-  firstName: nameSchema,
-  lastName: nameSchema,
   id: idSchema,
+  created_at: timeStampSchema,
+  first_name: nameSchema,
+  last_name: nameSchema,
+  profile_complete: z.boolean(),
 });
 
-export type ProfileInput = z.infer<typeof ProfileSchema>;
+export type Profile = z.infer<typeof ProfileSchema>;
+
+export const BoardingSchema = ProfileSchema.pick({
+  first_name: true,
+  last_name: true,
+});
+export type BoardingData = z.infer<typeof BoardingSchema>;

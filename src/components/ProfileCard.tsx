@@ -9,21 +9,22 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Input } from "./ui/input";
-import { ProfileSchema } from "@/schemas/profile.schema";
-import { useProfile } from "@/hooks/useProfile";
+import { BoardingSchema } from "@/schemas/profile.schema";
 
 export function ProfileCard() {
-  const { session, profile } = useAuth();
-  const { createProfile } = useProfile();
+  const { auth, upsertProfile } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    if (auth.status !== "ready" && auth.status !== "profileNotBoarded") {
+      console.error("no active session");
+      return;
+    }
     const form = e.currentTarget;
-    const parseResult = ProfileSchema.safeParse({
-      firstName: form.vorname.value,
-      lastName: form.nachname.value,
-      id: session.user.id,
+    const fd = new FormData(e.currentTarget);
+    const parseResult = BoardingSchema.safeParse({
+      first_name: String(fd.get("vorname") ?? ""),
+      last_name: String(fd.get("nachname") ?? ""),
     });
 
     if (!parseResult.success) {
@@ -33,20 +34,23 @@ export function ProfileCard() {
     }
 
     const res = parseResult.data;
+    console.log(res);
     try {
-      const result = await createProfile(res.firstName, res.lastName, res.id);
+      const result = await upsertProfile({
+        first_name: res.first_name,
+        last_name: res.last_name,
+      });
 
       console.log("created", result);
     } catch (error) {
       console.error("Error creating profile:", error);
     } finally {
       form.reset();
-      console.log("Profile created: ", profile);
     }
   };
 
   return (
-    <Card className="w-sm">
+    <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Profil anlegen</CardTitle>
         <CardDescription>
@@ -74,6 +78,7 @@ export function ProfileCard() {
                 name="nachname"
                 type="text"
                 placeholder="Mustermann"
+                required
               />
             </div>
           </div>
