@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Input } from "./ui/input";
-import { BoardingSchema } from "@/schemas/profile.schema";
+import { BoardingSchema } from "@/schemas";
 
 export function ProfileCard() {
   const { auth, upsertProfile } = useAuth();

@@ -37,3 +37,24 @@ export const timeStampSchema = z
     message: "Ungültiges Datumsformat",
   })
   .optional();
+
+// text schemas
+export const shortTextSchema = z.string().trim().min(2).max(120);
+export const longTextSchema = z
+  .string()
+  .trim()
+  .max(10000)
+  .optional()
+  .nullable();
+export const projectGoalSchema = z.string().trim().min(20).max(3000);
+export const userStorySchema = z.string().trim().min(10).max(1000);
+export const commentSchema = z.string().trim().min(1).max(2000);
+
+// atomic role-name definition
+export const roleNameSchema = z.enum([
+  "Product Owner",
+  "Scrum Master",
+  "Developer",
+  "Stakeholder (active)",
+  "Stakeholder (passive)",
+]);

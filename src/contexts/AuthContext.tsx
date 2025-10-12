@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
 import type { Session } from "@supabase/supabase-js";
-import { type Profile } from "@/schemas/profile.schema";
+import { type ProfileRow } from "@/schemas";
 import {
   useContext,
   useEffect,
@@ -9,14 +9,16 @@ import {
   createContext,
 } from "react";
 
-export type ProfilePatch = Partial<Pick<Profile, "first_name" | "last_name">>;
+export type ProfilePatch = Partial<
+  Pick<ProfileRow, "first_name" | "last_name">
+>;
 
 export type AuthState =
   | { status: "loading" }
   | { status: "unauthenticated" }
   | { status: "profileLoading"; session: Session }
   | { status: "profileNotBoarded"; session: Session }
-  | { status: "ready"; session: Session; profile: Profile };
+  | { status: "ready"; session: Session; profile: ProfileRow };
 
 // context type
 type AuthContextValue = {
@@ -25,7 +27,7 @@ type AuthContextValue = {
   signUp: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
-  upsertProfile: (patch: ProfilePatch) => Promise<Profile>;
+  upsertProfile: (patch: ProfilePatch) => Promise<ProfileRow>;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -52,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .from("profiles")
         .select("*")
         .eq("id", session.user.id)
-        .maybeSingle<Profile>();
+        .maybeSingle<ProfileRow>();
 
       if (error) {
         console.error("Fehler beim Laden des Profils", error.message);
@@ -108,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .from("profiles")
         .select("*")
         .eq("id", auth.session.user.id)
-        .maybeSingle<Profile>();
+        .maybeSingle<ProfileRow>();
 
       if (error || !data || data.profile_complete === false) {
         setAuth({ status: "profileNotBoarded", session: auth.session });
@@ -137,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         { onConflict: "id" }
       )
       .select("*")
-      .single<Profile>();
+      .single<ProfileRow>();
     if (error) throw error;
     setAuth({ status: "ready", session: auth.session, profile: data });
     return data;

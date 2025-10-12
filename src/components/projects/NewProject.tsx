@@ -20,7 +20,19 @@ import {
   FieldSeparator,
 } from "../ui/field";
 
+import MemberTable from "../MemberTable";
+import { Button } from "../ui/button";
+import { useState } from "react";
+
 export default function NewProject() {
+  const [projectName, setProjectName] = useState("");
+  const [projectGoal, setProjectGoal] = useState("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(projectName, " - ", projectGoal);
+  };
+
   return (
     <div className="flex flex-row justify-center">
       <Card className="w-full max-w-4xl">
@@ -30,10 +42,18 @@ export default function NewProject() {
             Geben Sie einen Projektnamen und das Projektziel (Product Goal) an.
             Sie werden als Product Owner gesetzt.
           </CardDescription>
-          <CardAction>Irgendwas</CardAction>
+          <CardAction>
+            <Button type="submit" form="new-project-form">
+              Projekt anlegen
+            </Button>
+          </CardAction>
         </CardHeader>
         <CardContent className="flex flex-row justify-center">
-          <Form className="w-full max-w-xl">
+          <Form
+            id="new-project-form"
+            className="w-full max-w-xl"
+            onSubmit={handleSubmit}
+          >
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="project-name">Projektname</FieldLabel>
@@ -41,6 +61,8 @@ export default function NewProject() {
                   id="project-name"
                   name="project-name"
                   placeholder="Projektname..."
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
                   required
                 />
                 <FieldDescription>
@@ -59,6 +81,8 @@ export default function NewProject() {
                   name="product-goal"
                   placeholder="Wer soll was erreichen/ tun können, um welchen Nutzen zu erzielen..."
                   rows={5}
+                  value={projectGoal}
+                  onChange={(e) => setProjectGoal(e.target.value)}
                   required
                 />
                 <FieldDescription>
@@ -66,6 +90,10 @@ export default function NewProject() {
                   Zustand, den das Produkt erreichen soll.
                 </FieldDescription>
                 <FieldError></FieldError>
+              </Field>
+              <FieldSeparator />
+              <Field>
+                <MemberTable />
               </Field>
             </FieldGroup>
           </Form>

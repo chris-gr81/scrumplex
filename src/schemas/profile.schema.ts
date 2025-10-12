@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { idSchema, nameSchema, timeStampSchema } from "./atoms";
+import { idSchema, nameSchema, timeStampSchema } from "@/schemas";
 
 export const ProfileSchema = z.object({
   id: idSchema,
@@ -9,7 +9,7 @@ export const ProfileSchema = z.object({
   profile_complete: z.boolean(),
 });
 
-export type Profile = z.infer<typeof ProfileSchema>;
+export type ProfileRow = z.infer<typeof ProfileSchema>;
 
 export const BoardingSchema = ProfileSchema.pick({
   first_name: true,

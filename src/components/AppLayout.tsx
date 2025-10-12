@@ -52,17 +52,11 @@ export function AppLayout() {
             </div>
             <div className="flex items-center gap-3">
               <Button
-                className="bg-emerald-500 hover:bg-emerald-600 text-white"
                 onClick={() => navigate("/new-project", { replace: true })}
               >
                 Neues Projekt
               </Button>
-              <Button
-                className="bg-emerald-500 hover:bg-emerald-600 text-white"
-                onClick={logout}
-              >
-                Logout
-              </Button>
+              <Button onClick={logout}>Logout</Button>
             </div>
           </header>
 
