@@ -15,3 +15,11 @@ export const ProjectSchema = z.object({
 });
 
 export type ProjectRow = z.infer<typeof ProjectSchema>;
+
+export const NewProjectSchema = ProjectSchema.pick({
+  name: true,
+  goal: true,
+  finished: true,
+});
+
+export type NewProjectData = z.infer<typeof NewProjectSchema>;

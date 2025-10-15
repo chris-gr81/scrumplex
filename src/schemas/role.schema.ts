@@ -9,5 +9,8 @@ export const RoleSchema = z
   })
   .strict();
 
+export const Role = RoleSchema.pick({ id: true, name: true });
+export type RoleType = z.infer<typeof Role>;
+
 export type RoleRow = z.infer<typeof RoleSchema>;
 export type RoleName = z.infer<typeof roleNameSchema>;

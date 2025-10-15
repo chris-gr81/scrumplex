@@ -8,3 +8,4 @@ export * from "./auth.schema";
 export * from "./profile.schema";
 export * from "./projectMember.schema";
 export * from "./role.schema";
+export * from "./project.schema";

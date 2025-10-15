@@ -23,14 +23,34 @@ import {
 import MemberTable from "../MemberTable";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { useProject } from "@/contexts/ProjectContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function NewProject() {
+  const { createProject, createProjectMembers } = useProject();
+  const { auth, roles } = useAuth();
   const [projectName, setProjectName] = useState("");
   const [projectGoal, setProjectGoal] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(projectName, " - ", projectGoal);
+    if (auth.status !== "ready") return;
+    const resProject = await createProject({
+      name: projectName,
+      goal: projectGoal,
+      finished: true,
+    });
+    const projectId = resProject.id;
+    const profileId = auth.profile.id;
+    const roleId = roles?.find((r) => {
+      return r.name === "Product Owner";
+    })?.id;
+    if (!roleId) return;
+    const resProjectMembers = await createProjectMembers({
+      project_id: projectId,
+      profile_id: profileId,
+      role_id: roleId,
+    });
   };
 
   return (

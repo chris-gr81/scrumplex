@@ -1,13 +1,15 @@
 import { supabase } from "@/lib/supabaseClient";
 import type { Session } from "@supabase/supabase-js";
-import { type ProfileRow } from "@/schemas";
+import { type ProfileRow, type RoleType } from "@/schemas";
 import {
   useContext,
   useEffect,
   useState,
   type ReactNode,
   createContext,
+  useRef,
 } from "react";
+import { loadRoles } from "@/lib/utils";
 
 export type ProfilePatch = Partial<
   Pick<ProfileRow, "first_name" | "last_name">
@@ -28,6 +30,7 @@ type AuthContextValue = {
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   upsertProfile: (patch: ProfilePatch) => Promise<ProfileRow>;
+  roles: RoleType[] | null;
 };
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -35,6 +38,8 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 // provider
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>({ status: "loading" });
+  const [roles, setRoles] = useState<RoleType[] | null>(null);
+  const isReady = useRef(false);
 
   /** loading session and profile */
   useEffect(() => {
@@ -74,6 +79,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (auth.status === "profileLoading") {
       void refreshProfile();
+    }
+  }, [auth.status]);
+
+  // inital loads of statics when authstate is "ready"
+  useEffect(() => {
+    if (auth.status === "ready" && isReady.current === false) {
+      (async () => {
+        const res = await loadRoles();
+        setRoles(res);
+      })();
+      isReady.current = true;
     }
   }, [auth.status]);
 
@@ -147,7 +163,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ auth, signIn, signUp, logout, refreshProfile, upsertProfile }}
+      value={{
+        auth,
+        signIn,
+        signUp,
+        logout,
+        refreshProfile,
+        upsertProfile,
+        roles,
+      }}
     >
       {children}
     </AuthContext.Provider>
