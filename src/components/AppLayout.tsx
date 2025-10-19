@@ -5,6 +5,7 @@ import logo from "../assets/scrumplex_logo.png";
 import { useNavigate, Outlet, Link } from "react-router";
 import { ProjectProvider } from "@/contexts/ProjectContext";
 import { getGreeting } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 
 export function AppLayout() {
   const { logout, auth } = useAuth();
@@ -63,6 +64,7 @@ export function AppLayout() {
           {/* Flache Arbeitsfläche */}
           <main className="flex-1 overflow-y-auto p-6">
             {/* direkt auf bg-zinc-200 – hier kannst du Cards platzieren */}
+            <Toaster position="top-center" />
             <Outlet />
           </main>
         </div>

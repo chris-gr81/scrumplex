@@ -1,7 +1,9 @@
 import { supabase } from "@/lib/supabaseClient";
 import {
+  CurrentProjectSchema,
   NewProjectMemberSchema,
   NewProjectSchema,
+  type CurrentProjectType,
   type NewProjectMemberType,
   type ProjectMembersRow,
   type ProjectRow,
@@ -13,11 +15,15 @@ export type ProjectPatch = Partial<
 >;
 
 type ProjectContextValue = {
-  project: any;
+  project: CurrentProjectType | null;
   createProject: (patch: ProjectPatch) => Promise<ProjectRow>;
   createProjectMembers: (
     patch: NewProjectMemberType
   ) => Promise<ProjectMembersRow>; // TODO ;)
+  setCurrentProject: (projectId: CurrentProjectType) => void;
+  getCurrentProject: (
+    currentId: CurrentProjectType
+  ) => Promise<ProjectRow | null>;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -25,7 +31,7 @@ const ProjectContext = createContext<ProjectContextValue | undefined>(
 );
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
-  const [project, setProject] = useState<any>(null);
+  const [project, setProject] = useState<CurrentProjectType | null>(null);
 
   const createProject = async (patch: ProjectPatch) => {
     const parseResult = NewProjectSchema.safeParse({
@@ -75,9 +81,37 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     return data;
   };
 
+  const setCurrentProject = (projectId: CurrentProjectType): void => {
+    setProject(projectId);
+  };
+
+  const getCurrentProject = async (
+    currentId: CurrentProjectType
+  ): Promise<ProjectRow | null> => {
+    const res = CurrentProjectSchema.safeParse(currentId);
+    if (!res.success) return null;
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*")
+      .eq("id", res.data)
+      .single();
+
+    if (error) {
+      console.error("Reading Projects Error: ", error);
+      return null;
+    }
+    return data;
+  };
+
   return (
     <ProjectContext.Provider
-      value={{ project, createProject, createProjectMembers }}
+      value={{
+        project,
+        createProject,
+        createProjectMembers,
+        setCurrentProject,
+        getCurrentProject,
+      }}
     >
       {children}
     </ProjectContext.Provider>

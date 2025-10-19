@@ -1,4 +1,4 @@
-import { Form } from "react-router";
+import { Form, useNavigate } from "react-router";
 import {
   Card,
   CardAction,
@@ -27,10 +27,12 @@ import { useProject } from "@/contexts/ProjectContext";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function NewProject() {
-  const { createProject, createProjectMembers } = useProject();
+  const { project, createProject, createProjectMembers, setCurrentProject } =
+    useProject();
   const { auth, roles } = useAuth();
   const [projectName, setProjectName] = useState("");
   const [projectGoal, setProjectGoal] = useState("");
+  const redirect = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +40,7 @@ export default function NewProject() {
     const resProject = await createProject({
       name: projectName,
       goal: projectGoal,
-      finished: true,
+      finished: false,
     });
     const projectId = resProject.id;
     const profileId = auth.profile.id;
@@ -46,11 +48,23 @@ export default function NewProject() {
       return r.name === "Product Owner";
     })?.id;
     if (!roleId) return;
+
     const resProjectMembers = await createProjectMembers({
       project_id: projectId,
       profile_id: profileId,
       role_id: roleId,
     });
+
+    if (resProjectMembers && resProject) {
+      setCurrentProject(resProject.id);
+      if (project) console.log("Sucess, here is the project", project);
+      const message =
+        'Das Projekt "' + resProject.name + '" wurde erfolgreich angelegt.';
+      redirect("/dashboard", {
+        replace: true,
+        state: { toast: { type: "success", message: message } },
+      });
+    }
   };
 
   return (

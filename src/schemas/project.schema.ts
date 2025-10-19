@@ -23,3 +23,6 @@ export const NewProjectSchema = ProjectSchema.pick({
 });
 
 export type NewProjectData = z.infer<typeof NewProjectSchema>;
+
+export const CurrentProjectSchema = ProjectSchema.shape.id;
+export type CurrentProjectType = z.infer<typeof CurrentProjectSchema>;
