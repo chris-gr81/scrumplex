@@ -88,6 +88,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (async () => {
         const res = await loadRoles();
         setRoles(res);
+
       })();
       isReady.current = true;
     }

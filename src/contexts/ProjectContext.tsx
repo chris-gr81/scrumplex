@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabaseClient";
+import { loadCurrentProject } from "@/lib/utils";
 import {
   CurrentProjectSchema,
   NewProjectMemberSchema,
@@ -8,7 +9,7 @@ import {
   type ProjectMembersRow,
   type ProjectRow,
 } from "@/schemas";
-import { useContext, useState, type ReactNode, createContext } from "react";
+import { useContext, useState, type ReactNode, createContext, useRef, useEffect } from "react";
 
 export type ProjectPatch = Partial<
   Pick<ProjectRow, "name" | "goal" | "finished">
@@ -32,7 +33,16 @@ const ProjectContext = createContext<ProjectContextValue | undefined>(
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
   const [project, setProject] = useState<CurrentProjectType | null>(null);
-
+ 
+  // initial loader
+  useEffect(() => {
+    (async () => {
+      const res = await loadCurrentProject()
+     
+      setProject(res?res.current_project:null)
+    })()
+  },[])
+  
   const createProject = async (patch: ProjectPatch) => {
     const parseResult = NewProjectSchema.safeParse({
       name: (patch.name ?? "").toString().trim(),

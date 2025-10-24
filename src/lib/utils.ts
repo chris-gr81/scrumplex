@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { supabase } from "./supabaseClient";
-import type { RoleType } from "@/schemas";
+import type { CurrentProjectType, RoleType } from "@/schemas";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -23,3 +23,13 @@ export const loadRoles = async (): Promise<RoleType[] | null> => {
   }
   return data ?? null;
 };
+
+export const loadCurrentProject = async (): Promise<{current_project: CurrentProjectType} | null> => {
+  const {data, error} = await supabase.from("profiles").select("current_project").single();
+  if (error) {
+    console.error("Error loading current profile", error.message);
+    return null
+  }
+  return data ?? null;
+}
+
