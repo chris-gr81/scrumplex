@@ -27,8 +27,13 @@ import { useProject } from "@/contexts/ProjectContext";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function NewProject() {
-  const { project, createProject, createProjectMembers, setCurrentProject } =
-    useProject();
+  const {
+    project,
+    createProject,
+    createProjectMembers,
+    setCurrentProject,
+    updateCurrentProjectToDb,
+  } = useProject();
   const { auth, roles } = useAuth();
   const [projectName, setProjectName] = useState("");
   const [projectGoal, setProjectGoal] = useState("");
@@ -57,6 +62,7 @@ export default function NewProject() {
 
     if (resProjectMembers && resProject) {
       setCurrentProject(resProject.id);
+      await updateCurrentProjectToDb(resProject.id);
       if (project) console.log("Sucess, here is the project", project);
       const message =
         'Das Projekt "' + resProject.name + '" wurde erfolgreich angelegt.';

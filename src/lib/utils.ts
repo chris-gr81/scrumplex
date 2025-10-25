@@ -24,12 +24,20 @@ export const loadRoles = async (): Promise<RoleType[] | null> => {
   return data ?? null;
 };
 
-export const loadCurrentProject = async (): Promise<{current_project: CurrentProjectType} | null> => {
-  const {data, error} = await supabase.from("profiles").select("current_project").single();
+// expects string in uuid style (project id)
+export const loadCurrentProject = async (
+  userId: string
+): Promise<{
+  current_project: CurrentProjectType;
+} | null> => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("current_project")
+    .eq("id", userId)
+    .single();
   if (error) {
     console.error("Error loading current profile", error.message);
-    return null
+    return null;
   }
   return data ?? null;
-}
-
+};

@@ -9,7 +9,14 @@ import {
   type ProjectMembersRow,
   type ProjectRow,
 } from "@/schemas";
-import { useContext, useState, type ReactNode, createContext, useRef, useEffect } from "react";
+import {
+  useContext,
+  useState,
+  type ReactNode,
+  createContext,
+  useEffect,
+} from "react";
+import { useAuth } from "./AuthContext";
 
 export type ProjectPatch = Partial<
   Pick<ProjectRow, "name" | "goal" | "finished">
@@ -25,6 +32,7 @@ type ProjectContextValue = {
   getCurrentProject: (
     currentId: CurrentProjectType
   ) => Promise<ProjectRow | null>;
+  updateCurrentProjectToDb: (currentId: string) => Promise<void>;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -33,16 +41,30 @@ const ProjectContext = createContext<ProjectContextValue | undefined>(
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
   const [project, setProject] = useState<CurrentProjectType | null>(null);
- 
+  const { auth } = useAuth();
+
   // initial loader
   useEffect(() => {
+    if (auth.status !== "ready") return;
     (async () => {
-      const res = await loadCurrentProject()
-     
-      setProject(res?res.current_project:null)
-    })()
-  },[])
-  
+      const res = await loadCurrentProject(auth.profile.id);
+
+      setProject(res ? res.current_project : null);
+    })();
+  }, []);
+
+  // updater vor current project in auth profile
+  const updateCurrentProjectToDb = async (currentId: string): Promise<void> => {
+    console.log("Updating current project to db (try):", project);
+    if (auth.status !== "ready") return;
+    const { error } = await supabase
+      .from("profiles")
+      .update({ current_project: currentId })
+      .eq("id", auth.profile.id);
+    if (error) console.error("Updating current project to db error: ", error);
+    console.log("Updating current project to db success");
+  };
+
   const createProject = async (patch: ProjectPatch) => {
     const parseResult = NewProjectSchema.safeParse({
       name: (patch.name ?? "").toString().trim(),
@@ -110,6 +132,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       console.error("Reading Projects Error: ", error);
       return null;
     }
+    console.log("Fetched current project data: ", data);
     return data;
   };
 
@@ -121,6 +144,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         createProjectMembers,
         setCurrentProject,
         getCurrentProject,
+        updateCurrentProjectToDb,
       }}
     >
       {children}

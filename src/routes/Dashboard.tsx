@@ -1,3 +1,4 @@
+import ProjectHeader from "@/components/projects/ProjectHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { useRouteToast } from "@/hooks/useRouteToast";
@@ -15,6 +16,7 @@ export default function Dashboard() {
   useRouteToast();
 
   useEffect(() => {
+    console.log("Current project in dashboard:", project);
     if (!project) return;
     (async () => {
       const res = await getCurrentProject(project);
@@ -26,7 +28,8 @@ export default function Dashboard() {
 
   if (projectData) {
     return (
-      <div>
+      <div className="flex flex-col items-center">
+        <ProjectHeader projectData={projectData} />
         <h2>Projectus habemus! </h2>
         <ul className="list-disc p-5">
           <li>Projektname: {projectData.name}</li>
