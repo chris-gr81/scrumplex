@@ -1,17 +1,63 @@
-import type { ProjectRow } from "@/schemas";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { useProject } from "@/contexts/ProjectContext";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
-export const ProjectHeader = ({ projectData }: ProjectRow) => {
-  const { project } = useProject();
-  console.log(projectData.name);
+interface ProjectHeaderProps {
+  title: string;
+  description: string;
+  date?: string;
+  isProject: boolean;
+}
+
+export const ProjectHeader = (props: ProjectHeaderProps) => {
+  const [isGoalVisible, setIsGoalVisible] = useState(false);
+  const { title, description, date, isProject } = props;
+
+  const toogleGoalVisibility = () => {
+    setIsGoalVisible(!isGoalVisible);
+  };
   return (
     <Card className="w-full max-w-6xl">
-      <CardHeader>{projectData.name}</CardHeader>
-      <CardContent>
-        <p>{projectData.id}</p>
-        <p>{project}</p>
-      </CardContent>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        {isProject ? (
+          // true-case: is a project
+          <CardDescription>Angelegt am: {date ? date : ""}</CardDescription>
+        ) : (
+          // false-case: is not a project
+          <CardDescription>{description}</CardDescription>
+        )}
+
+        <CardAction>
+          {isProject ? (
+            // true-case: is a project
+            <Button variant="outline" size="sm" onClick={toogleGoalVisibility}>
+              <span className="text-xs">
+                {isGoalVisible
+                  ? "Projektziel verbergen"
+                  : "Projektziel anzeigen"}
+              </span>
+            </Button>
+          ) : // false-case: is not a project
+          null}
+        </CardAction>
+      </CardHeader>
+      {isGoalVisible && isProject ? (
+        <CardContent>
+          <p className="font-normal text-sm text-muted-foreground">
+            &bdquo;{description}&ldquo;
+          </p>
+        </CardContent>
+      ) : (
+        ""
+      )}
     </Card>
   );
 };

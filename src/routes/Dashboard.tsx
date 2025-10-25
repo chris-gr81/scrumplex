@@ -2,6 +2,7 @@ import ProjectHeader from "@/components/projects/ProjectHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { useRouteToast } from "@/hooks/useRouteToast";
+import { formatDateToEU } from "@/lib/utils";
 import type { ProjectRow } from "@/schemas";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
@@ -24,32 +25,26 @@ export default function Dashboard() {
     })();
   }, [project, getCurrentProject]);
 
-  if (auth.status !== "ready") return;
+  if (auth.status !== "ready") return null;
 
-  if (projectData) {
-    return (
-      <div className="flex flex-col items-center">
-        <ProjectHeader projectData={projectData} />
-        <h2>Projectus habemus! </h2>
-        <ul className="list-disc p-5">
-          <li>Projektname: {projectData.name}</li>
-          <li>Projektziel: {projectData.goal}</li>
-          <li>Erstellt am: {projectData.created_at}</li>
-          <li>Status: {projectData.finished ? "beendet" : "offen"}</li>
-        </ul>
-      </div>
-    );
-  }
+  const headerProbs = projectData
+    ? {
+        title: projectData.name,
+        description: projectData.goal,
+        date: formatDateToEU(projectData.created_at),
+        isProject: true,
+      }
+    : {
+        title: "Kein Projekt ausgewählt",
+        description:
+          "Bitte wählen Sie ein Projekt aus, oder legen Sie ein neues Projekt an.",
+        date: "",
+        isProject: false,
+      };
 
   return (
-    <div>
-      <h2 className="font-bold">Das wird einmal das Dashboard</h2>
-      <p>Weil grad kein Projekt vorhanden ist, hier Zustandsdaten </p>
-      <ul className="list-disc p-5">
-        <li>Profile Vorname: {auth.profile.first_name}</li>
-        <li>Profile Nachname: {auth.profile.last_name}</li>
-        <li>Profile ID: {auth.profile.id}</li>
-      </ul>
+    <div className="flex flex-col items-center">
+      <ProjectHeader {...headerProbs} />
     </div>
   );
 }
