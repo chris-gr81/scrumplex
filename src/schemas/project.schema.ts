@@ -12,6 +12,7 @@ export const ProjectSchema = z.object({
   name: shortTextSchema,
   goal: projectGoalSchema,
   finished: z.boolean(),
+  owner_id: idSchema.optional(),
 });
 
 export type ProjectRow = z.infer<typeof ProjectSchema>;
@@ -26,3 +27,6 @@ export type NewProjectData = z.infer<typeof NewProjectSchema>;
 
 export const CurrentProjectSchema = ProjectSchema.shape.id;
 export type CurrentProjectType = z.infer<typeof CurrentProjectSchema>;
+
+export const ProjectListSchema = z.array(ProjectSchema);
+export type ProjectListType = z.infer<typeof ProjectListSchema>;

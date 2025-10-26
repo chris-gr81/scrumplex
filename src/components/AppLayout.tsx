@@ -4,11 +4,14 @@ import { useAuth } from "@/contexts/AuthContext";
 import logo from "../assets/scrumplex_logo.png";
 import { useNavigate, Outlet, Link } from "react-router";
 import { ProjectProvider } from "@/contexts/ProjectContext";
+import { useDisplay } from "@/contexts/DisplayContext";
 import { getGreeting } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { set } from "zod";
 
 export function AppLayout() {
   const { logout, auth } = useAuth();
+  const { setActivePanel } = useDisplay();
   const navigate = useNavigate();
   const greeting = getGreeting();
 
@@ -25,11 +28,17 @@ export function AppLayout() {
             />
           </div>
           <nav className="flex-1 px-3 py-5 space-y-1">
-            <div className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer">
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
+              onClick={() => setActivePanel("empty")}
+            >
               <Home className="w-5 h-5" />
-              <Link to="/dashboard">Dashboard</Link>
+              <p>Dashboard</p>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer">
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
+              onClick={() => setActivePanel("projectList")}
+            >
               <FolderKanban className="w-5 h-5" />
               <span>Projekte</span>
             </div>
@@ -52,9 +61,7 @@ export function AppLayout() {
               {auth.status === "ready" ? auth.profile.first_name : undefined}!
             </div>
             <div className="flex items-center gap-3">
-              <Button
-                onClick={() => navigate("/new-project", { replace: true })}
-              >
+              <Button onClick={() => setActivePanel("newProject")}>
                 Neues Projekt
               </Button>
               <Button onClick={logout}>Logout</Button>

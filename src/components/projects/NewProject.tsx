@@ -25,6 +25,8 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { useProject } from "@/contexts/ProjectContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDisplay } from "@/contexts/DisplayContext";
+import { toast } from "sonner";
 
 export default function NewProject() {
   const {
@@ -37,7 +39,7 @@ export default function NewProject() {
   const { auth, roles } = useAuth();
   const [projectName, setProjectName] = useState("");
   const [projectGoal, setProjectGoal] = useState("");
-  const redirect = useNavigate();
+  const { setActivePanel } = useDisplay();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -64,82 +66,84 @@ export default function NewProject() {
       setCurrentProject(resProject.id);
       await updateCurrentProjectToDb(resProject.id);
       if (project) console.log("Sucess, here is the project", project);
+
       const message =
         'Das Projekt "' + resProject.name + '" wurde erfolgreich angelegt.';
+      setActivePanel("empty");
+      toast["success"](message);
+      /*
       redirect("/dashboard", {
         replace: true,
         state: { toast: { type: "success", message: message } },
-      });
+      });*/
     }
   };
 
   return (
-    <div className="flex flex-row justify-center">
-      <Card className="w-full max-w-4xl">
-        <CardHeader>
-          <CardTitle>Neues Projekt anlegen</CardTitle>
-          <CardDescription>
-            Geben Sie einen Projektnamen und das Projektziel (Product Goal) an.
-            Sie werden als Product Owner gesetzt.
-          </CardDescription>
-          <CardAction>
-            <Button type="submit" form="new-project-form">
-              Projekt anlegen
-            </Button>
-          </CardAction>
-        </CardHeader>
-        <CardContent className="flex flex-row justify-center">
-          <Form
-            id="new-project-form"
-            className="w-full max-w-xl"
-            onSubmit={handleSubmit}
-          >
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="project-name">Projektname</FieldLabel>
-                <Input
-                  id="project-name"
-                  name="project-name"
-                  placeholder="Projektname..."
-                  value={projectName}
-                  onChange={(e) => setProjectName(e.target.value)}
-                  required
-                />
-                <FieldDescription>
-                  Wählen Sie einen aussagekräftigen Projektnamen.
-                </FieldDescription>
-                <FieldError></FieldError>
-              </Field>
-              <FieldSeparator />
-              <Field>
-                <FieldLabel htmlFor="product-goal">
-                  Projektziel (Product Goal)
-                </FieldLabel>
+    <Card className="w-full max-w-6xl">
+      <CardHeader>
+        <CardTitle>Neues Projekt anlegen</CardTitle>
+        <CardDescription>
+          Geben Sie einen Projektnamen und das Projektziel (Product Goal) an.
+          Sie werden als Product Owner gesetzt.
+        </CardDescription>
+        <CardAction>
+          <Button type="submit" form="new-project-form">
+            Projekt anlegen
+          </Button>
+        </CardAction>
+      </CardHeader>
+      <CardContent className="flex flex-row justify-center">
+        <Form
+          id="new-project-form"
+          className="w-full max-w-xl"
+          onSubmit={handleSubmit}
+        >
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="project-name">Projektname</FieldLabel>
+              <Input
+                id="project-name"
+                name="project-name"
+                placeholder="Projektname..."
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                required
+              />
+              <FieldDescription>
+                Wählen Sie einen aussagekräftigen Projektnamen.
+              </FieldDescription>
+              <FieldError></FieldError>
+            </Field>
+            <FieldSeparator />
+            <Field>
+              <FieldLabel htmlFor="product-goal">
+                Projektziel (Product Goal)
+              </FieldLabel>
 
-                <Textarea
-                  id="product-goal"
-                  name="product-goal"
-                  placeholder="Wer soll was erreichen/ tun können, um welchen Nutzen zu erzielen..."
-                  rows={5}
-                  value={projectGoal}
-                  onChange={(e) => setProjectGoal(e.target.value)}
-                  required
-                />
-                <FieldDescription>
-                  Ein gutes Product-Goal beschreibt den gewünschten Nutzen oder
-                  Zustand, den das Produkt erreichen soll.
-                </FieldDescription>
-                <FieldError></FieldError>
-              </Field>
-              <FieldSeparator />
-              <Field>
-                <MemberTable />
-              </Field>
-            </FieldGroup>
-          </Form>
-        </CardContent>
-        <CardFooter></CardFooter>
-      </Card>
-    </div>
+              <Textarea
+                id="product-goal"
+                name="product-goal"
+                placeholder="Wer soll was erreichen/ tun können, um welchen Nutzen zu erzielen..."
+                rows={5}
+                value={projectGoal}
+                onChange={(e) => setProjectGoal(e.target.value)}
+                required
+              />
+              <FieldDescription>
+                Ein gutes Product-Goal beschreibt den gewünschten Nutzen oder
+                Zustand, den das Produkt erreichen soll.
+              </FieldDescription>
+              <FieldError></FieldError>
+            </Field>
+            <FieldSeparator />
+            <Field>
+              <MemberTable />
+            </Field>
+          </FieldGroup>
+        </Form>
+      </CardContent>
+      <CardFooter></CardFooter>
+    </Card>
   );
 }

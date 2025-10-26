@@ -7,6 +7,7 @@ import ProfileCard from "./components/ProfileCard";
 import AuthLayout from "./components/AuthLayout";
 import AppLayout from "./components/AppLayout";
 import NewProject from "./components/projects/NewProject";
+import { DisplayProvider } from "./contexts/DisplayContext";
 
 function App() {
   const router = createBrowserRouter([
@@ -35,7 +36,9 @@ function App() {
   ]);
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
+      <DisplayProvider>
+        <RouterProvider router={router} />{" "}
+      </DisplayProvider>
     </AuthProvider>
   );
 }

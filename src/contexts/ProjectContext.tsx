@@ -33,6 +33,7 @@ type ProjectContextValue = {
     currentId: CurrentProjectType
   ) => Promise<ProjectRow | null>;
   updateCurrentProjectToDb: (currentId: string) => Promise<void>;
+  getAllProjectsForUser: () => any;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -136,6 +137,20 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     return data;
   };
 
+  const getAllProjectsForUser = async () => {
+    if (auth.status !== "ready") return [];
+    const { data, error } = await supabase
+      .from("projects")
+      .select("*, project_members(*)")
+      .eq("project_members.profile_id", auth.profile.id);
+
+    if (error) {
+      console.error("Reading Projects by Owner Error: ", error);
+      return [];
+    }
+    return data;
+  };
+
   return (
     <ProjectContext.Provider
       value={{
@@ -145,6 +160,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         setCurrentProject,
         getCurrentProject,
         updateCurrentProjectToDb,
+        getAllProjectsForUser,
       }}
     >
       {children}

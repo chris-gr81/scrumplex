@@ -1,5 +1,7 @@
+import NewProject from "@/components/projects/NewProject";
 import ProjectHeader from "@/components/projects/ProjectHeader";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDisplay } from "@/contexts/DisplayContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { useRouteToast } from "@/hooks/useRouteToast";
 import { formatDateToEU } from "@/lib/utils";
@@ -10,6 +12,7 @@ import { useLocation } from "react-router";
 export default function Dashboard() {
   const { auth } = useAuth();
   const { project, getCurrentProject } = useProject();
+  const { getActivePanel } = useDisplay();
   const [projectData, setProjectData] = useState<ProjectRow | null>(null);
   const { state } = useLocation();
   console.log("route state", state);
@@ -43,8 +46,9 @@ export default function Dashboard() {
       };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center gap-3">
       <ProjectHeader {...headerProbs} />
+      {getActivePanel()}
     </div>
   );
 }
