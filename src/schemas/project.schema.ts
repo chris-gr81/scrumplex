@@ -28,5 +28,9 @@ export type NewProjectData = z.infer<typeof NewProjectSchema>;
 export const CurrentProjectSchema = ProjectSchema.shape.id;
 export type CurrentProjectType = z.infer<typeof CurrentProjectSchema>;
 
-export const ProjectListSchema = z.array(ProjectSchema);
+export const ProjectListSchema = z.array(
+  ProjectSchema.extend({
+    ownerName: z.string().optional(),
+  })
+);
 export type ProjectListType = z.infer<typeof ProjectListSchema>;
