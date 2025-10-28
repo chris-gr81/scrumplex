@@ -29,7 +29,7 @@ export function AppLayout() {
           <nav className="flex-1 px-3 py-5 space-y-1">
             <div
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
-              onClick={() => setActivePanel("empty")}
+              onClick={() => setActivePanel("productBacklogList")}
             >
               <Home className="w-5 h-5" />
               <p>Dashboard</p>

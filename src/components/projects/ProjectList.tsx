@@ -25,12 +25,7 @@ import { toast } from "sonner";
 export const ProjectList = () => {
   const [projects, setProjects] = useState<ProjectListType>([]);
   const { setActivePanel } = useDisplay();
-  const {
-    project,
-    getAllProjectsForUser,
-
-    setCurrentProject,
-  } = useProject();
+  const { project, getAllProjectsForUser, setCurrentProject } = useProject();
 
   useEffect(() => {
     (async () => {
@@ -73,7 +68,7 @@ export const ProjectList = () => {
         <CardAction>
           <SquareX
             className="cursor-pointer text-foreground/50 hover:text-foreground"
-            onClick={() => setActivePanel("empty")}
+            onClick={() => setActivePanel("productBacklogList")}
           />
         </CardAction>
       </CardHeader>

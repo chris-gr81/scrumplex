@@ -1,8 +1,13 @@
+import ProductBacklogList from "@/components/productBacklog/ProductBacklogList";
 import NewProject from "@/components/projects/NewProject";
 import ProjectList from "@/components/projects/ProjectList";
 import { useContext, createContext, useState, type ReactNode } from "react";
 
-type PanelOptions = "empty" | "newProject" | "projectList";
+type PanelOptions =
+  | "empty"
+  | "newProject"
+  | "projectList"
+  | "productBacklogList";
 
 type DisplayContextValue = {
   getActivePanel: () => ReactNode;
@@ -24,6 +29,8 @@ export function DisplayProvider({ children }: { children: ReactNode }) {
         return <NewProject />;
       case "projectList":
         return <ProjectList />;
+      case "productBacklogList":
+        return <ProductBacklogList />;
       default:
         return <div>Default Fall</div>;
     }
