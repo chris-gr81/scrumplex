@@ -1,4 +1,3 @@
-import { Form, useNavigate } from "react-router";
 import {
   Card,
   CardAction,
@@ -71,11 +70,6 @@ export default function NewProject() {
         'Das Projekt "' + resProject.name + '" wurde erfolgreich angelegt.';
       setActivePanel("empty");
       toast["success"](message);
-      /*
-      redirect("/dashboard", {
-        replace: true,
-        state: { toast: { type: "success", message: message } },
-      });*/
     }
   };
 
@@ -94,7 +88,7 @@ export default function NewProject() {
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-row justify-center">
-        <Form
+        <form
           id="new-project-form"
           className="w-full max-w-xl"
           onSubmit={handleSubmit}
@@ -141,7 +135,7 @@ export default function NewProject() {
               <MemberTable />
             </Field>
           </FieldGroup>
-        </Form>
+        </form>
       </CardContent>
       <CardFooter></CardFooter>
     </Card>

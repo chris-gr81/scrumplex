@@ -34,7 +34,6 @@ type ProjectContextValue = {
   ) => Promise<ProjectRow | null>;
   updateCurrentProjectToDb: (currentId: string) => Promise<void>;
   getAllProjectsForUser: () => any;
-  getProjectOwnerName: (projectId: string, ownerId?: string) => Promise<string>;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -142,31 +141,15 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     if (auth.status !== "ready") return [];
     const { data, error } = await supabase
       .from("projects")
-      .select("*, project_members(*)")
+      .select("*, project_members(*, profiles(first_name, last_name))")
       .eq("project_members.profile_id", auth.profile.id);
 
     if (error) {
       console.error("Reading Projects by Owner Error: ", error);
       return [];
     }
+
     return data;
-  };
-
-  const getProjectOwnerName = async (projectId: string, ownerId?: string) => {
-    const { data, error } = await supabase
-      .from("project_members")
-      .select("profiles(first_name, last_name)")
-      .eq("project_id", projectId)
-      .eq("profile_id", ownerId)
-      .single<{ profiles: { first_name: string; last_name: string } | null }>();
-
-    if (error) console.error("Reading Project Owner Name Error: ", error);
-
-    if (data?.profiles) {
-      const { first_name, last_name } = data.profiles;
-      return `${first_name} ${last_name}`;
-    }
-    return "Unbekannt";
   };
 
   return (
@@ -179,7 +162,6 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         getCurrentProject,
         updateCurrentProjectToDb,
         getAllProjectsForUser,
-        getProjectOwnerName,
       }}
     >
       {children}

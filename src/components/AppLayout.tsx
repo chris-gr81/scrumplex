@@ -7,7 +7,6 @@ import { ProjectProvider } from "@/contexts/ProjectContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { getGreeting } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
-import { set } from "zod";
 
 export function AppLayout() {
   const { logout, auth } = useAuth();
