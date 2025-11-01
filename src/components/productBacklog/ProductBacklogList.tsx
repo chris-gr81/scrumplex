@@ -16,11 +16,26 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { mockStories } from "@/mocks/stories"; // mock data
 
 export const ProductBacklogList = () => {
+  const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    const initialState = mockStories.reduce((acc, story) => {
+      acc[story.id] = false;
+      return acc;
+    }, {} as Record<string, boolean>);
+    setOpenRows(initialState);
+  }, []);
+
   const toggleRowExpansion = (e: React.MouseEvent<SVGSVGElement>) => {
-    const targetID = e.currentTarget.dataset.toggleId;
-    console.log(targetID);
+    const targetId = e.currentTarget.dataset.toggleId;
+    if (targetId) {
+      setOpenRows((prev) => ({ ...prev, [targetId]: !prev[targetId] }));
+    }
   };
   return (
     <Card className="w-full">
@@ -52,23 +67,53 @@ export const ProductBacklogList = () => {
             </FtabRow>
           </FtabHeader>
           <FtabBody>
-            <FtabRow data-row-id="123" subRow={"Als Nutzer möchte ich..."}>
-              <FtabCell className="truncate basis-[5%]">
-                <ChevronRight
-                  data-toggle-id="123"
-                  className="cursor-pointer text-foreground/50 hover:text-foreground"
-                  onClick={toggleRowExpansion}
-                />
-              </FtabCell>
-              <FtabCell className="truncate basis-[40%]">
-                Ein Testprojekt
-              </FtabCell>
-              <FtabCell className="truncate basis-[11%]">01.11.2025</FtabCell>
-              <FtabCell className="truncate basis-[11%]">80%</FtabCell>
-              <FtabCell className="truncate basis-[11%]">5</FtabCell>
-              <FtabCell className="truncate basis-[11%]">Icebox</FtabCell>
-              <FtabCell className="truncate basis-[11%]">Offen</FtabCell>
-            </FtabRow>
+            {mockStories.map((storie) => {
+              return (
+                <FtabRow
+                  data-row-id={storie.id}
+                  subRow={
+                    openRows[storie.id] ? (
+                      <>
+                        <p>
+                          Als {storie.story_as} möchte ich {storie.story_like},
+                          weil {storie.story_cause}.
+                        </p>
+                        <p>Definition of done: {storie.definition_of_done}</p>
+                      </>
+                    ) : undefined
+                  }
+                >
+                  <FtabCell className="truncate basis-[5%]">
+                    <ChevronRight
+                      data-toggle-id={storie.id}
+                      className={cn(
+                        "h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground transition-transform duration-200",
+                        openRows[storie.id] && "rotate-90"
+                      )}
+                      onClick={toggleRowExpansion}
+                    />
+                  </FtabCell>
+                  <FtabCell className="truncate basis-[40%]">
+                    {storie.name}
+                  </FtabCell>
+                  <FtabCell className="truncate basis-[11%]">
+                    {storie.created_at}
+                  </FtabCell>
+                  <FtabCell className="truncate basis-[11%]">
+                    {storie.invest}
+                  </FtabCell>
+                  <FtabCell className="truncate basis-[11%]">
+                    {storie.storypoints}
+                  </FtabCell>
+                  <FtabCell className="truncate basis-[11%]">
+                    {storie.priority}
+                  </FtabCell>
+                  <FtabCell className="truncate basis-[11%]">
+                    {storie.status}
+                  </FtabCell>
+                </FtabRow>
+              );
+            })}
           </FtabBody>
         </Ftab>
       </CardContent>

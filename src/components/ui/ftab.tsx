@@ -61,7 +61,7 @@ function FtabRow({
     <div
       data-slot="ftab-row"
       className={cn(
-        "flexflex-coll w-full border-b border-border transition-colors hover:bg-muted/40",
+        "flex-coll w-full border-b border-border transition-colors hover:bg-muted/40",
         className
       )}
       {...props}
