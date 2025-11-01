@@ -57,7 +57,7 @@ export const ProjectList = () => {
   };
 
   return (
-    <Card className="w-full max-w-6xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Projektliste</CardTitle>
         <CardDescription>

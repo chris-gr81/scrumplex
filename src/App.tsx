@@ -10,30 +10,33 @@ import NewProject from "./components/projects/NewProject";
 import { DisplayProvider } from "./contexts/DisplayContext";
 
 function App() {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Root />, // Gatekeeper
-      children: [
-        {
-          element: <AuthLayout />,
-          children: [
-            { path: "login", element: <LoginForm /> },
-            { path: "onboarding", element: <ProfileCard /> },
-          ],
-        },
-        {
-          element: <AppLayout />,
-          children: [
-            { index: true, element: <Navigate to="/dashboard" replace /> },
-            { path: "dashboard", element: <Dashboard /> },
-            { path: "new-project", element: <NewProject /> },
-          ],
-        },
-      ],
-    },
-    { path: "*", element: <div>404 Not Found</div> },
-  ]);
+  const router = createBrowserRouter(
+    [
+      {
+        path: "/",
+        element: <Root />, // Gatekeeper
+        children: [
+          {
+            element: <AuthLayout />,
+            children: [
+              { path: "login", element: <LoginForm /> },
+              { path: "onboarding", element: <ProfileCard /> },
+            ],
+          },
+          {
+            element: <AppLayout />,
+            children: [
+              { index: true, element: <Navigate to="/dashboard" replace /> },
+              { path: "dashboard", element: <Dashboard /> },
+              { path: "new-project", element: <NewProject /> },
+            ],
+          },
+        ],
+      },
+      { path: "*", element: <div>404 Not Found</div> },
+    ],
+    { basename: "/scrumplex" }
+  );
   return (
     <AuthProvider>
       <DisplayProvider>

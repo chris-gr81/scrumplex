@@ -24,7 +24,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
     setIsGoalVisible(!isGoalVisible);
   };
   return (
-    <Card className="w-full max-w-6xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {isProject ? (

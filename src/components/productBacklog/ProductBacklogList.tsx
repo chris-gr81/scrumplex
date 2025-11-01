@@ -8,7 +8,7 @@ import {
 
 export const ProductBacklogList = () => {
   return (
-    <Card className="w-full max-w-6xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Product Backlog</CardTitle>
         <CardDescription>
