@@ -19,8 +19,8 @@ import {
 
 export const ProductBacklogList = () => {
   const toggleRowExpansion = (e: React.MouseEvent<SVGSVGElement>) => {
-    console.log(e.currentTarget.dataset.toggleId);
-    const id = e.currentTarget.dataset.toggleId;
+    const targetID = e.currentTarget.dataset.toggleId;
+    console.log(targetID);
   };
   return (
     <Card className="w-full">
