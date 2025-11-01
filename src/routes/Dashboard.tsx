@@ -1,4 +1,3 @@
-import NewProject from "@/components/projects/NewProject";
 import ProjectHeader from "@/components/projects/ProjectHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDisplay } from "@/contexts/DisplayContext";

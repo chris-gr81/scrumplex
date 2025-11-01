@@ -2,7 +2,7 @@ import { FolderKanban, Home, Settings } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "../assets/scrumplex_logo.png";
-import { useNavigate, Outlet, Link } from "react-router";
+import { Outlet } from "react-router";
 import { ProjectProvider } from "@/contexts/ProjectContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { getGreeting } from "@/lib/utils";
@@ -11,7 +11,6 @@ import { Toaster } from "@/components/ui/sonner";
 export function AppLayout() {
   const { logout, auth } = useAuth();
   const { setActivePanel } = useDisplay();
-  const navigate = useNavigate();
   const greeting = getGreeting();
 
   return (

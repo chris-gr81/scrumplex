@@ -17,7 +17,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { signIn, signUp, refreshProfile } = useAuth();
+  const { signIn, signUp } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
