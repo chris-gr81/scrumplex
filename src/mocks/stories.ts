@@ -12,8 +12,11 @@ export const mockStories = [
     story_like: "mich anmelden können",
     story_cause: "ich auf meine persönlichen Daten zugreifen möchte",
     updated_at: "",
-    definition_of_done:
-      "Formular funktioniert, Validierung ist aktiv, Nutzer wird in DB gespeichert.",
+    definition_of_done: [
+      { name: "Formular funktioniert", done: false },
+      { name: "Validierung ist aktiv", done: false },
+      { name: "Nutzer wird in DB gespeichert", done: false },
+    ],
   },
   {
     id: "aa2",
@@ -28,14 +31,17 @@ export const mockStories = [
     story_like: "eine schnelle Vorschau haben",
     story_cause: "ich meine Ideen testen will",
     updated_at: "",
-    definition_of_done:
-      "Mockdaten werden geladen, Tabelle rendert, Toggle funktioniert.",
+    definition_of_done: [
+      { name: "Mockdaten werden geladen", done: false },
+      { name: "Tabelle rendert", done: false },
+      { name: "Toggle funktioniert", done: false },
+    ],
   },
   {
     id: "aa3",
     created_at: "08.10.2025",
     project_id: "001",
-    name: "Einach mal locker bleiben",
+    name: "Einfach mal locker bleiben",
     invest: 90,
     storypoints: 7,
     priority: "Icebox",
@@ -44,8 +50,11 @@ export const mockStories = [
     story_like: "sehen, dass das Projekt stabil läuft",
     story_cause: "ich Vertrauen in den Prozess gewinnen will",
     updated_at: "",
-    definition_of_done:
-      "Review abgeschlossen, Testdaten stabil, keine UI-Fehler.",
+    definition_of_done: [
+      { name: "Review abgeschlossen", done: false },
+      { name: "Testdaten stabil", done: false },
+      { name: "Keine UI-Fehler", done: false },
+    ],
   },
 ];
 

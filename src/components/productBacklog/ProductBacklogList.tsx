@@ -19,6 +19,11 @@ import {
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { mockStories } from "@/mocks/stories"; // mock data
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "../ui/resizable";
 
 export const ProductBacklogList = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
@@ -91,13 +96,45 @@ export const ProductBacklogList = () => {
                   data-row-id={storie.id}
                   subRow={
                     openRows[storie.id] ? (
-                      <>
-                        <p>
-                          Als {storie.story_as} möchte ich {storie.story_like},
-                          weil {storie.story_cause}.
-                        </p>
-                        <p>Definition of done: {storie.definition_of_done}</p>
-                      </>
+                      <div className="flex flex-row pb-2">
+                        <div className="basis-[5%]"></div>
+                        <ResizablePanelGroup
+                          direction="horizontal"
+                          className="basis-[95%] pr-2"
+                        >
+                          <ResizablePanel defaultSize={50}>
+                            <p className="font-bold">Story:</p>
+                            <p>
+                              &bdquo;<span className="font-semibold">Als</span>{" "}
+                              {storie.story_as}{" "}
+                              <span className="font-semibold">möchte ich</span>{" "}
+                              {storie.story_like},{" "}
+                            </p>
+                            <p>
+                              <span className="font-semibold">weil</span>{" "}
+                              {storie.story_cause}
+                              .&ldquo;
+                            </p>
+                          </ResizablePanel>
+                          <ResizableHandle />
+                          <ResizablePanel
+                            defaultSize={50}
+                            className="pl-2 pr-2"
+                          >
+                            <p className="font-bold">Definition of done:</p>
+                            <ul className="list-disc list-inside pl-2">
+                              {storie.definition_of_done.map((dod) => {
+                                return (
+                                  <li>
+                                    {dod.name}{" "}
+                                    {dod.done ? "(abgeschlossen)" : "(offen)"}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </ResizablePanel>
+                        </ResizablePanelGroup>
+                      </div>
                     ) : undefined
                   }
                 >
