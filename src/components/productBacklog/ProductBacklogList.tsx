@@ -22,6 +22,7 @@ import { mockStories } from "@/mocks/stories"; // mock data
 
 export const ProductBacklogList = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
+  const [isAllOpen, setIsAllOpen] = useState(false);
 
   useEffect(() => {
     const initialState = mockStories.reduce((acc, story) => {
@@ -30,6 +31,16 @@ export const ProductBacklogList = () => {
     }, {} as Record<string, boolean>);
     setOpenRows(initialState);
   }, []);
+
+  const toggleAllRowExpansion = () => {
+    const rowsArray = Object.entries(openRows);
+    const newRows = rowsArray.map(([key]) => {
+      return [key, !isAllOpen];
+    });
+    setOpenRows(Object.fromEntries(newRows));
+
+    setIsAllOpen(!isAllOpen);
+  };
 
   const toggleRowExpansion = (e: React.MouseEvent<SVGSVGElement>) => {
     const targetId = e.currentTarget.dataset.toggleId;
@@ -56,7 +67,13 @@ export const ProductBacklogList = () => {
           <FtabHeader>
             <FtabRow>
               <FtabHead className="truncate basis-[5%]">
-                <ChevronRight className="cursor-pointer text-foreground/50 hover:text-foreground" />
+                <ChevronRight
+                  onClick={toggleAllRowExpansion}
+                  className={cn(
+                    "cursor-pointer text-foreground/50 hover:text-foreground transition-transform duration-200",
+                    isAllOpen && "rotate-90"
+                  )}
+                />
               </FtabHead>
               <FtabHead className="truncate basis-[40%]">Story-Name</FtabHead>
               <FtabHead className="truncate basis-[11%]">Erstellt am:</FtabHead>
@@ -70,6 +87,7 @@ export const ProductBacklogList = () => {
             {mockStories.map((storie) => {
               return (
                 <FtabRow
+                  key={storie.id}
                   data-row-id={storie.id}
                   subRow={
                     openRows[storie.id] ? (
