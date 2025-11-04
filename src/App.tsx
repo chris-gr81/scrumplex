@@ -8,6 +8,7 @@ import AuthLayout from "./components/AuthLayout";
 import AppLayout from "./components/AppLayout";
 import NewProject from "./components/projects/NewProject";
 import { DisplayProvider } from "./contexts/DisplayContext";
+import { Toaster } from "sonner";
 
 function App() {
   const router = createBrowserRouter(
@@ -28,7 +29,6 @@ function App() {
             children: [
               { index: true, element: <Navigate to="/dashboard" replace /> },
               { path: "dashboard", element: <Dashboard /> },
-              { path: "new-project", element: <NewProject /> },
             ],
           },
         ],
@@ -40,7 +40,8 @@ function App() {
   return (
     <AuthProvider>
       <DisplayProvider>
-        <RouterProvider router={router} />{" "}
+        <RouterProvider router={router} />
+        <Toaster position="top-center" />
       </DisplayProvider>
     </AuthProvider>
   );

@@ -68,8 +68,6 @@ export function AppLayout() {
 
           {/* Flache Arbeitsfläche */}
           <main className="flex-1 overflow-y-auto p-6">
-            {/* direkt auf bg-zinc-200 – hier kannst du Cards platzieren */}
-            <Toaster position="top-center" />
             <Outlet />
           </main>
         </div>

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, handleZodError } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,7 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, type FormEvent } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { AuthSchema } from "@/schemas";
+import { LoginSchema, SignUpSchema } from "@/schemas";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -25,14 +26,16 @@ export function LoginForm({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const parseResult = AuthSchema.safeParse({
+    const schema = isSignUp ? SignUpSchema : LoginSchema;
+
+    const parseResult = schema.safeParse({
       email: email.trim().toLowerCase(),
       password: password,
     });
 
     if (!parseResult.success) {
-      console.error("Validation error: ", parseResult.error);
-      // TODO: Error handling
+      handleZodError(parseResult.error);
+
       return;
     }
 
@@ -42,6 +45,7 @@ export function LoginForm({
       try {
         await signUp(res.email, res.password);
       } catch (signUpError: any) {
+        toast.error("Ungültige Email-Adresse oder Passwort");
         console.error("Error signing up:", signUpError.message);
         return;
       }
@@ -49,6 +53,9 @@ export function LoginForm({
       try {
         await signIn(res.email, res.password);
       } catch (signInError: any) {
+        if (signInError.message) {
+          toast.error("Ungültige Email-Adresse oder Passwort");
+        }
         console.error("Error signing in: ", signInError.message);
         return;
       }

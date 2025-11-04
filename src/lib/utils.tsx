@@ -2,6 +2,8 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { supabase } from "./supabaseClient";
 import type { CurrentProjectType, RoleType } from "@/schemas";
+import type { ZodError } from "zod";
+import { toast, Toaster } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -49,4 +51,16 @@ export const formatDateToEU = (dateString: string | undefined): string => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
   return `${day}.${month}.${year}`;
+};
+
+// formating zod errors to toaster-ready-messages
+export const handleZodError = (error: ZodError) => {
+  toast.error(
+    <ul>
+      <strong>Üngültige Eingabe:</strong>
+      {error.issues.map((issue, i) => (
+        <li key={i}>{issue.message}</li>
+      ))}
+    </ul>
+  );
 };

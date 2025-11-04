@@ -23,12 +23,18 @@ export const idSchema = z.uuid({ error: "Ungültige ID" });
 export const passwordSchema = z
   .string()
   .trim()
-  .min(8, { message: "Mindestens 8 Zeichen" })
-  .max(100, { message: "Maximal 100 Zeichen" })
-  .regex(/[A-Z]/, { message: "Mindestens ein Großbuchstabe" })
-  .regex(/[a-z]/, { message: "Mindestens ein Kleinbuchstabe" })
-  .regex(/[0-9]/, { message: "Mindestens eine Zahl" })
-  .regex(/[^A-Za-z0-9]/, { message: "Mindestens ein Sonderzeichen" });
+  .min(8, { message: "Das Passwort benötigt mindestens 8 Zeichen" })
+  .max(100, { message: "Das Passwort darf maximal 100 Zeichen haben" })
+  .regex(/[A-Z]/, {
+    message: "Das Passwort benötigt mindestens einen Großbuchstabe",
+  })
+  .regex(/[a-z]/, {
+    message: "Das Passwort benötigt mindestens einen Kleinbuchstabe",
+  })
+  .regex(/[0-9]/, { message: "Das Passwort benötigt mindestens eine Zahl" })
+  .regex(/[^A-Za-z0-9]/, {
+    message: "Das Passwort benötigt mindestens ein Sonderzeichen",
+  });
 
 export const timeStampSchema = z
   .string()
