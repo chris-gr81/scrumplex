@@ -25,6 +25,20 @@ for scalable Scrum project management (based on the Scrum Guide 2020).
 
 ## 2. Table Details
 
+### definition_of_done
+
+| Column       | Type        | Nullable | Default           | Description                                  |
+| ------------ | ----------- | -------- | ----------------- | -------------------------------------------- |
+| id           | uuid        | no       | gen_random_uuid() | Primary key of the table                     |
+| created_at   | timestamptz | no       | now()             | Timestamp when the record was created        |
+| updated_at   | timestamptz | no       | now()             | Timestamp when the record was last updated   |
+| userstory_id | uuid        | no       | null              | References the related user story            |
+| name         | text        | no       | –                 | Description of the “Definition of Done” item |
+| done         | boolean     | no       | false             | Indicates whether the item is completed      |
+
+**Purpose:**  
+Stores individual “Definition of Done” checklist items linked to a specific user story.
+
 ### profiles
 
 | Column           | Type        | Nullable | Default | Description                         |
@@ -167,16 +181,17 @@ Used for quality scoring and story refinement.
 
 ## 3. Foreign Key Relationships
 
-| Source Table    | Source Column   | Target Table | Target Column | Description                                    |
-| --------------- | --------------- | ------------ | ------------- | ---------------------------------------------- |
-| invest          | userstory_id    | userstories  | id            | Each INVEST evaluation belongs to a user story |
-| profiles        | current_project | projects     | id            | User’s active project selection                |
-| project_members | project_id      | projects     | id            | Member’s associated project                    |
-| project_members | profile_id      | profiles     | id            | Member’s linked profile                        |
-| project_members | role_id         | roles        | id            | Assigned role                                  |
-| userstories     | priority_id     | priority     | id            | Priority reference                             |
-| userstories     | status_id       | status       | id            | Workflow status reference                      |
-| userstories     | project_id      | projects     | id            | Story belongs to project                       |
+| Source Table       | Source Column   | Target Table | Target Column | Description               |
+| ------------------ | --------------- | ------------ | ------------- | ------------------------- |
+| definition_of_done | userstory_id    | userstories  | id            | References userstories.id |
+| invest             | userstory_id    | userstories  | id            | References userstories.id |
+| profiles           | current_project | projects     | id            | References projects.id    |
+| project_members    | profile_id      | profiles     | id            | References profiles.id    |
+| project_members    | project_id      | projects     | id            | References projects.id    |
+| project_members    | role_id         | roles        | id            | References roles.id       |
+| userstories        | priority_id     | priority     | id            | References priority.id    |
+| userstories        | project_id      | projects     | id            | References projects.id    |
+| userstories        | status_id       | status       | id            | References status.id      |
 
 ---
 

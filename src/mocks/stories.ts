@@ -71,6 +71,6 @@ export const mockStories = [
         story_like: "",
         story_cause: "",
         updated_at: "",
-        definition_of_done: ""
+        definition_of_done: [{name: "", done: ""}]
     }
 */
