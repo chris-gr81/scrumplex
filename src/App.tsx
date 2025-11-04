@@ -6,7 +6,6 @@ import { LoginForm } from "./components/login-form";
 import ProfileCard from "./components/ProfileCard";
 import AuthLayout from "./components/AuthLayout";
 import AppLayout from "./components/AppLayout";
-import NewProject from "./components/projects/NewProject";
 import { DisplayProvider } from "./contexts/DisplayContext";
 import { Toaster } from "sonner";
 

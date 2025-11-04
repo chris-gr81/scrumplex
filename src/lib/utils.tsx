@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { supabase } from "./supabaseClient";
 import type { CurrentProjectType, RoleType } from "@/schemas";
 import type { ZodError } from "zod";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -41,7 +41,7 @@ export const mockStories = [
     id: "aa3",
     created_at: "08.10.2025",
     project_id: "001",
-    name: "Einfach mal locker bleiben",
+    name: "Entspanntes Vertrauen",
     invest: 90,
     storypoints: 7,
     priority: "Icebox",

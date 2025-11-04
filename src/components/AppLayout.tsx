@@ -6,7 +6,6 @@ import { Outlet } from "react-router";
 import { ProjectProvider } from "@/contexts/ProjectContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { getGreeting } from "@/lib/utils";
-import { Toaster } from "@/components/ui/sonner";
 
 export function AppLayout() {
   const { logout, auth } = useAuth();
