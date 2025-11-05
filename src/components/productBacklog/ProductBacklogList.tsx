@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Ftab,
@@ -53,6 +53,11 @@ export const ProductBacklogList = () => {
       setOpenRows((prev) => ({ ...prev, [targetId]: !prev[targetId] }));
     }
   };
+
+  const openStoryDialog = () => {
+    setStoryDialogOpen(true);
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -62,7 +67,7 @@ export const ProductBacklogList = () => {
           Elemente könne vom Product Owner bearbeitet und prioriest werden.
         </CardDescription>
         <CardAction>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={openStoryDialog}>
             <span className="text-xs">Story anlegen</span>
           </Button>
         </CardAction>
@@ -81,11 +86,12 @@ export const ProductBacklogList = () => {
                 />
               </FtabHead>
               <FtabHead className="truncate basis-[40%]">Story-Name</FtabHead>
-              <FtabHead className="truncate basis-[11%]">Erstellt am:</FtabHead>
-              <FtabHead className="truncate basis-[11%]">INVEST in %</FtabHead>
-              <FtabHead className="truncate basis-[11%]">Storypoints</FtabHead>
-              <FtabHead className="truncate basis-[11%]">Priorität</FtabHead>
-              <FtabHead className="truncate basis-[11%]">Status</FtabHead>
+              <FtabHead className="truncate basis-[10%]">Erstellt am:</FtabHead>
+              <FtabHead className="truncate basis-[10%]">INVEST in %</FtabHead>
+              <FtabHead className="truncate basis-[10%]">Storypoints</FtabHead>
+              <FtabHead className="truncate basis-[10%]">Priorität</FtabHead>
+              <FtabHead className="truncate basis-[10%]">Status</FtabHead>
+              <FtabHead className="truncate basis-[5%]"></FtabHead>
             </FtabRow>
           </FtabHeader>
           <FtabBody>
@@ -151,20 +157,26 @@ export const ProductBacklogList = () => {
                   <FtabCell className="truncate basis-[40%]">
                     {storie.name}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[11%]">
+                  <FtabCell className="truncate basis-[10%]">
                     {storie.created_at}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[11%]">
+                  <FtabCell className="truncate basis-[10%]">
                     {storie.invest}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[11%]">
+                  <FtabCell className="truncate basis-[10%]">
                     {storie.storypoints}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[11%]">
+                  <FtabCell className="truncate basis-[10%]">
                     {storie.priority}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[11%]">
+                  <FtabCell className="truncate basis-[10%]">
                     {storie.status}
+                  </FtabCell>
+                  <FtabCell className="truncate basis-[5%]">
+                    <Pencil
+                      onClick={openStoryDialog}
+                      className="h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground"
+                    />
                   </FtabCell>
                 </FtabRow>
               );
