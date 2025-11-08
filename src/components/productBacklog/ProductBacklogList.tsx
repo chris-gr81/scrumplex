@@ -25,7 +25,10 @@ import {
   ResizablePanelGroup,
 } from "../ui/resizable";
 
+import { useDisplay } from "@/contexts/DisplayContext";
+
 export const ProductBacklogList = () => {
+  const { setActivePanel } = useDisplay();
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const [isAllOpen, setIsAllOpen] = useState(false);
 
@@ -54,10 +57,6 @@ export const ProductBacklogList = () => {
     }
   };
 
-  const openStoryDialog = () => {
-    setStoryDialogOpen(true);
-  };
-
   return (
     <Card className="w-full">
       <CardHeader>
@@ -67,7 +66,13 @@ export const ProductBacklogList = () => {
           Elemente könne vom Product Owner bearbeitet und prioriest werden.
         </CardDescription>
         <CardAction>
-          <Button variant="outline" size="sm" onClick={openStoryDialog}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setActivePanel({ type: "userStory", isEdit: false });
+            }}
+          >
             <span className="text-xs">Story anlegen</span>
           </Button>
         </CardAction>
@@ -174,7 +179,9 @@ export const ProductBacklogList = () => {
                   </FtabCell>
                   <FtabCell className="truncate basis-[5%]">
                     <Pencil
-                      onClick={openStoryDialog}
+                      onClick={() => {
+                        setActivePanel({ type: "userStory", isEdit: true });
+                      }}
                       className="h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground"
                     />
                   </FtabCell>

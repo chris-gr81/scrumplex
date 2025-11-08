@@ -68,7 +68,7 @@ export default function NewProject() {
 
       const message =
         'Das Projekt "' + resProject.name + '" wurde erfolgreich angelegt.';
-      setActivePanel("empty");
+      setActivePanel({ type: "empty" });
       toast["success"](message);
     }
   };

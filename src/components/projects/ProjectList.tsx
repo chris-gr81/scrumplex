@@ -68,7 +68,7 @@ export const ProjectList = () => {
         <CardAction>
           <SquareX
             className="cursor-pointer text-foreground/50 hover:text-foreground"
-            onClick={() => setActivePanel("productBacklogList")}
+            onClick={() => setActivePanel({ type: "productBacklogList" })}
           />
         </CardAction>
       </CardHeader>

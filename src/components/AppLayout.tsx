@@ -27,14 +27,14 @@ export function AppLayout() {
           <nav className="flex-1 px-3 py-5 space-y-1">
             <div
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
-              onClick={() => setActivePanel("productBacklogList")}
+              onClick={() => setActivePanel({ type: "productBacklogList" })}
             >
               <Home className="w-5 h-5" />
               <p>Dashboard</p>
             </div>
             <div
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
-              onClick={() => setActivePanel("projectList")}
+              onClick={() => setActivePanel({ type: "projectList" })}
             >
               <FolderKanban className="w-5 h-5" />
               <span>Projekte</span>
@@ -58,7 +58,7 @@ export function AppLayout() {
               {auth.status === "ready" ? auth.profile.first_name : undefined}!
             </div>
             <div className="flex items-center gap-3">
-              <Button onClick={() => setActivePanel("newProject")}>
+              <Button onClick={() => setActivePanel({ type: "newProject" })}>
                 Neues Projekt
               </Button>
               <Button onClick={logout}>Logout</Button>
