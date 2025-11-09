@@ -30,6 +30,8 @@ import { useDisplay } from "@/contexts/DisplayContext";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import DefinitionOfDoneList from "./DefinitionOfDoneList";
+import { useState } from "react";
+import { StoryDefault, type StoryType } from "@/schemas";
 
 interface UserStoryFormProps {
   edit: boolean;
@@ -38,7 +40,20 @@ interface UserStoryFormProps {
 export const UserStoryForm = (props: UserStoryFormProps) => {
   const { edit } = props;
   const { setActivePanel } = useDisplay();
+  const [story, setStory] = useState<StoryType>(StoryDefault);
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setStory((prev) => ({ ...prev, [name]: value }));
+    console.log(story);
+  };
+
+  const handleFieldChange = (name: string, value: string) => {
+    setStory((prev) => ({ ...prev, [name]: value }));
+  };
   return (
     <Card className="w-full">
       <CardHeader>
@@ -60,11 +75,15 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
       <CardContent className="flex">
         <FieldGroup className="pl-4 pr-4">
           <Field>
-            <FieldLabel htmlFor="story-name">Story-Name</FieldLabel>
+            <FieldLabel htmlFor="name">Story-Name</FieldLabel>
             <FieldDescription>
               Tragen Sie einen aussagekräftigen Namen ein.
             </FieldDescription>
-            <Input name="story-name"></Input>
+            <Input
+              name="name"
+              value={story.name}
+              onChange={handleChange}
+            ></Input>
           </Field>
           <Field>
             <FieldLabel>Userstory</FieldLabel>
@@ -73,12 +92,27 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
             </FieldDescription>
 
             <FieldContent>
-              <FieldLabel htmlFor="story-as">Als...</FieldLabel>
-              <Textarea name="story-as" placeholder="..." />
-              <FieldLabel htmlFor="story-like">möchte ich...</FieldLabel>
-              <Textarea name="story-like" placeholder="..." />
-              <FieldLabel htmlFor="story-cause">um...</FieldLabel>
-              <Textarea name="story-cause" placeholder="..." />
+              <FieldLabel htmlFor="story_as">Als...</FieldLabel>
+              <Textarea
+                name="story_as"
+                value={story.story_as}
+                placeholder="..."
+                onChange={handleChange}
+              />
+              <FieldLabel htmlFor="story_like">möchte ich...</FieldLabel>
+              <Textarea
+                name="story_like"
+                value={story.story_like}
+                placeholder="..."
+                onChange={handleChange}
+              />
+              <FieldLabel htmlFor="story_cause">um...</FieldLabel>
+              <Textarea
+                name="story_cause"
+                value={story.story_cause}
+                placeholder="..."
+                onChange={handleChange}
+              />
             </FieldContent>
           </Field>
         </FieldGroup>
@@ -89,7 +123,12 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
               Bearbeiten Sie hier die Metriken ihrer Userstory.
             </FieldDescription>
             <FieldContent className="flex flex-row">
-              <Select>
+              <Select
+                value={story.storypoints}
+                onValueChange={(value) =>
+                  handleFieldChange("storypoints", value)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Storypoints" />
                   <SelectContent>
@@ -103,7 +142,10 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                   </SelectContent>
                 </SelectTrigger>
               </Select>
-              <Select>
+              <Select
+                value={story.priority}
+                onValueChange={(value) => handleFieldChange("priority", value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Priorität" />
                 </SelectTrigger>
@@ -115,7 +157,10 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                   <SelectItem value="icebox">Icebox</SelectItem>
                 </SelectContent>
               </Select>
-              <Select>
+              <Select
+                value={story.status}
+                onValueChange={(value) => handleFieldChange("status", value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>

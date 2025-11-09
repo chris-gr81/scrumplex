@@ -31,9 +31,10 @@ export const ProductBacklogList = () => {
   const { setActivePanel } = useDisplay();
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const [isAllOpen, setIsAllOpen] = useState(false);
+  const mocks = mockStories.stories;
 
   useEffect(() => {
-    const initialState = mockStories.reduce((acc, story) => {
+    const initialState = mocks.reduce((acc, story) => {
       acc[story.id] = false;
       return acc;
     }, {} as Record<string, boolean>);
@@ -100,7 +101,7 @@ export const ProductBacklogList = () => {
             </FtabRow>
           </FtabHeader>
           <FtabBody>
-            {mockStories.map((storie) => {
+            {mocks.map((storie) => {
               return (
                 <FtabRow
                   key={storie.id}

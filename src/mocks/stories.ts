@@ -2,9 +2,9 @@ export const mockStories = {
   project_id: "34c0bcec-4841-4720-96cd-78191ed1ca90",
   stories: [
     {
-      id: "aa1",
+      id: "7b8f0a42-964d-4c8c-ae45-2c9b031fd03e",
       created_at: "01.11.2025",
-      project_id: "001",
+      project_id: "34c0bcec-4841-4720-96cd-78191ed1ca90",
       name: "User kann sich registrieren",
       invest: 80,
       storypoints: 5,
@@ -21,9 +21,9 @@ export const mockStories = {
       ],
     },
     {
-      id: "aa2",
+      id: "9cde21e8-1c17-4fa4-95b5-10b77bce68cb",
       created_at: "04.10.2025",
-      project_id: "001",
+      project_id: "34c0bcec-4841-4720-96cd-78191ed1ca90",
       name: "Ein Mock bereitstellen",
       invest: 70,
       storypoints: 2,
@@ -40,9 +40,9 @@ export const mockStories = {
       ],
     },
     {
-      id: "aa3",
+      id: "d5b2a6c9-31ef-4e8a-9c62-0f2c4ce2a5df",
       created_at: "08.10.2025",
-      project_id: "001",
+      project_id: "34c0bcec-4841-4720-96cd-78191ed1ca90",
       name: "Entspanntes Vertrauen",
       invest: 90,
       storypoints: 7,
@@ -61,13 +61,13 @@ export const mockStories = {
   ],
 };
 
-const anotherMockStorie = {
+export const anotherMockStorie = {
   project_id: "af995773-553a-4291-8021-56e0b1a8312e",
   stories: [
     {
-      id: "aa1",
+      id: "a4e8b5f7-0c79-49f0-8b5a-89dcbec6a05a",
       created_at: "01.11.2025",
-      project_id: "001",
+      project_id: "af995773-553a-4291-8021-56e0b1a8312e",
       name: "Passwort zurücksetzen",
       invest: 80,
       storypoints: 5,
@@ -85,9 +85,9 @@ const anotherMockStorie = {
       ],
     },
     {
-      id: "aa2",
+      id: "df62e0f3-2d7a-4d3e-9d25-9f6ac746b01e",
       created_at: "04.10.2025",
-      project_id: "001",
+      project_id: "af995773-553a-4291-8021-56e0b1a8312e",
       name: "Sprint-Fortschritt visualisieren",
       invest: 70,
       storypoints: 2,
@@ -108,9 +108,9 @@ const anotherMockStorie = {
       ],
     },
     {
-      id: "aa3",
+      id: "35f9a72c-b9b4-4e5c-9d44-42b1f178d219",
       created_at: "08.10.2025",
-      project_id: "001",
+      project_id: "af995773-553a-4291-8021-56e0b1a8312e",
       name: "Kommentare unter Stories",
       invest: 90,
       storypoints: 7,
