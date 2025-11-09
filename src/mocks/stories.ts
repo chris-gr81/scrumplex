@@ -15,9 +15,9 @@ export const mockStories = {
       story_cause: "ich auf meine persönlichen Daten zugreifen möchte",
       updated_at: "",
       definition_of_done: [
-        { name: "Formular funktioniert", done: false },
-        { name: "Validierung ist aktiv", done: false },
-        { name: "Nutzer wird in DB gespeichert", done: false },
+        { definition: "Formular funktioniert", done: false },
+        { definition: "Validierung ist aktiv", done: false },
+        { definition: "Nutzer wird in DB gespeichert", done: false },
       ],
     },
     {
@@ -34,9 +34,9 @@ export const mockStories = {
       story_cause: "ich meine Ideen testen will",
       updated_at: "",
       definition_of_done: [
-        { name: "Mockdaten werden geladen", done: false },
-        { name: "Tabelle rendert", done: false },
-        { name: "Toggle funktioniert", done: false },
+        { definition: "Mockdaten werden geladen", done: false },
+        { definition: "Tabelle rendert", done: false },
+        { definition: "Toggle funktioniert", done: false },
       ],
     },
     {
@@ -53,9 +53,9 @@ export const mockStories = {
       story_cause: "ich Vertrauen in den Prozess gewinnen will",
       updated_at: "",
       definition_of_done: [
-        { name: "Review abgeschlossen", done: false },
-        { name: "Testdaten stabil", done: false },
-        { name: "Keine UI-Fehler", done: false },
+        { definition: "Review abgeschlossen", done: false },
+        { definition: "Testdaten stabil", done: false },
+        { definition: "Keine UI-Fehler", done: false },
       ],
     },
   ],
@@ -79,9 +79,9 @@ export const anotherMockStorie = {
         "ich wieder Zugriff auf mein Konto erhalte, falls ich es vergessen habe.",
       updated_at: "",
       definition_of_done: [
-        { name: "E-Mail mit Reset-Link wird verschickt", done: false },
-        { name: "Formular validiert neues Passwort", done: false },
-        { name: "Passwortänderung wird in DB gespeichert", done: false },
+        { definition: "E-Mail mit Reset-Link wird verschickt", done: false },
+        { definition: "Formular validiert neues Passwort", done: false },
+        { definition: "Passwortänderung wird in DB gespeichert", done: false },
       ],
     },
     {
@@ -100,11 +100,15 @@ export const anotherMockStorie = {
       updated_at: "",
       definition_of_done: [
         {
-          name: "Balkenanzeige zeigt Prozent basierend auf erledigten Tasks",
+          definition:
+            "Balkenanzeige zeigt Prozent basierend auf erledigten Tasks",
           done: false,
         },
-        { name: "Daten aktualisieren sich automatisch", done: false },
-        { name: "Ansicht funktioniert auf Desktop und Tablet", done: false },
+        { definition: "Daten aktualisieren sich automatisch", done: false },
+        {
+          definition: "Ansicht funktioniert auf Desktop und Tablet",
+          done: false,
+        },
       ],
     },
     {
@@ -121,10 +125,13 @@ export const anotherMockStorie = {
       story_cause: "Rückfragen oder Ideen dokumentiert bleiben.",
       updated_at: "",
       definition_of_done: [
-        { name: "Kommentare werden gespeichert und angezeigt", done: false },
-        { name: "Markdown-Formatierung wird unterstützt", done: false },
         {
-          name: "Benachrichtigung an Story-Owner bei neuem Kommentar",
+          definition: "Kommentare werden gespeichert und angezeigt",
+          done: false,
+        },
+        { definition: "Markdown-Formatierung wird unterstützt", done: false },
+        {
+          definition: "Benachrichtigung an Story-Owner bei neuem Kommentar",
           done: false,
         },
       ],

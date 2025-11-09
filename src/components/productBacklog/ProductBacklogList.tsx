@@ -138,7 +138,7 @@ export const ProductBacklogList = () => {
                               {storie.definition_of_done.map((dod) => {
                                 return (
                                   <li>
-                                    {dod.name}{" "}
+                                    {dod.definition}{" "}
                                     {dod.done ? "(abgeschlossen)" : "(offen)"}
                                   </li>
                                 );

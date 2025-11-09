@@ -25,7 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { SquareX } from "lucide-react";
+import { SquareX, PlusCircle } from "lucide-react";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
@@ -41,6 +41,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
   const { edit } = props;
   const { setActivePanel } = useDisplay();
   const [story, setStory] = useState<StoryType>(StoryDefault);
+  const [dod, setDod] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -66,6 +67,24 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
       invest: { ...prev.invest, [name]: value, [rate]: rateValue },
     }));
     console.log(story);
+  };
+
+  const handleDoDEntry = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setDod(value);
+  };
+
+  const handleDodClick = () => {
+    if (!dod.trim()) return;
+
+    setStory((prev) => ({
+      ...prev,
+      definition_of_done: [
+        { definition: dod.trim(), done: false },
+        ...(prev.definition_of_done || []),
+      ],
+    }));
+    setDod("");
   };
 
   return (
@@ -295,8 +314,19 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
               Definieren Sie hier bis zu 10 Erfüllungskriterien Ihrer Userstory.
             </FieldDescription>
             <FieldContent>
-              <Input placeholder="Erfüllungskriterium eintragen"></Input>
-              <DefinitionOfDoneList />
+              <div className="flex flex-row gap-4 items-center justify-center ">
+                <Input
+                  name="dod"
+                  value={dod}
+                  placeholder="Erfüllungskriterium eintragen"
+                  onChange={handleDoDEntry}
+                ></Input>
+                <PlusCircle
+                  className="mr-1 cursor-pointer text-foreground/50 hover:text-foreground"
+                  onClick={handleDodClick}
+                />
+              </div>
+              <DefinitionOfDoneList story={story} setStory={setStory} />
             </FieldContent>
           </Field>
         </FieldGroup>

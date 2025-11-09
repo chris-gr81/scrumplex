@@ -6,7 +6,10 @@ import {
   userStorySchema,
 } from "./atoms";
 
-export const DodSchema = z.object({});
+export const DodItemSchema = z.object({
+  definition: shortTextSchema,
+  done: z.boolean().default(false),
+});
 
 export const InvestSchema = z.object({
   id: idSchema,
@@ -38,7 +41,7 @@ export const StorySchema = z.object({
   story_like: userStorySchema.optional(),
   story_cause: userStorySchema.optional(),
   updated_at: timeStampSchema.optional(),
-  definition_of_done: z.string().optional(),
+  definition_of_done: z.array(DodItemSchema).default([]),
 });
 
 export const StoryListSchema = z.object({
@@ -46,6 +49,7 @@ export const StoryListSchema = z.object({
 });
 
 export type StoryType = z.infer<typeof StorySchema>;
+export type DodItemType = z.infer<typeof DodItemSchema>;
 
 // default-data
 export const StoryDefault: StoryType = {
@@ -76,5 +80,5 @@ export const StoryDefault: StoryType = {
   story_like: "",
   story_cause: "",
   updated_at: "",
-  definition_of_done: "",
+  definition_of_done: [],
 };
