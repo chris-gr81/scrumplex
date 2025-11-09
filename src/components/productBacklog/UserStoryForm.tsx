@@ -54,6 +54,20 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
   const handleFieldChange = (name: string, value: string) => {
     setStory((prev) => ({ ...prev, [name]: value }));
   };
+
+  const handleCheckboxChange = (name: string, value: boolean) => {
+    // generate xy_rate out of xy_checked
+    const rate = name.split("_")[0] + "_rate";
+    // setting to zero or hundred
+    const rateValue = value ? 100 : 0;
+
+    setStory((prev) => ({
+      ...prev,
+      invest: { ...prev.invest, [name]: value, [rate]: rateValue },
+    }));
+    console.log(story);
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -182,7 +196,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
             </FieldDescription>
             <FieldGroup className="gap-1 font-normal text-foreground/50">
               <Field orientation="horizontal">
-                <Checkbox id="independent" />
+                <Checkbox
+                  name="independent_check"
+                  id="independent"
+                  checked={story.invest.independent_check}
+                  onCheckedChange={(value: boolean) =>
+                    handleCheckboxChange("independent_check", value)
+                  }
+                />
                 <FieldLabel htmlFor="independent">
                   <span>
                     <span className="text-foreground">I</span>ndependent
@@ -190,7 +211,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                 </FieldLabel>
               </Field>
               <Field orientation="horizontal">
-                <Checkbox id="negotiable" />
+                <Checkbox
+                  name="negotiable_check"
+                  id="negotiable"
+                  checked={story.invest.negotiable_check}
+                  onCheckedChange={(value: boolean) =>
+                    handleCheckboxChange("negotiable_check", value)
+                  }
+                />
                 <FieldLabel htmlFor="negotiable">
                   <span>
                     <span className="text-foreground">N</span>egotiable
@@ -198,7 +226,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                 </FieldLabel>
               </Field>
               <Field orientation="horizontal">
-                <Checkbox id="valuable" />
+                <Checkbox
+                  name="valuable_check"
+                  id="valuable"
+                  checked={story.invest.valuable_check}
+                  onCheckedChange={(value: boolean) =>
+                    handleCheckboxChange("valuable_check", value)
+                  }
+                />
                 <FieldLabel htmlFor="valuable">
                   <span>
                     <span className="text-foreground">V</span>aluable
@@ -206,7 +241,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                 </FieldLabel>
               </Field>
               <Field orientation="horizontal">
-                <Checkbox id="estimable" />
+                <Checkbox
+                  name="estimable_check"
+                  id="estimable"
+                  checked={story.invest.estimable_check}
+                  onCheckedChange={(value: boolean) =>
+                    handleCheckboxChange("estimable_check", value)
+                  }
+                />
                 <FieldLabel htmlFor="estimable">
                   <span>
                     <span className="text-foreground">E</span>stimable
@@ -214,7 +256,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                 </FieldLabel>
               </Field>
               <Field orientation="horizontal">
-                <Checkbox id="small" />
+                <Checkbox
+                  name="small_check"
+                  id="small"
+                  checked={story.invest.small_check}
+                  onCheckedChange={(value: boolean) =>
+                    handleCheckboxChange("small_check", value)
+                  }
+                />
                 <FieldLabel htmlFor="small">
                   <span>
                     <span className="text-foreground">S</span>mall
@@ -222,7 +271,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                 </FieldLabel>
               </Field>
               <Field orientation="horizontal">
-                <Checkbox id="testable" />
+                <Checkbox
+                  name="testable_check"
+                  id="testable"
+                  checked={story.invest.testable_check}
+                  onCheckedChange={(value: boolean) =>
+                    handleCheckboxChange("testable_check", value)
+                  }
+                />
                 <FieldLabel htmlFor="testable">
                   <span>
                     <span className="text-foreground">T</span>estable
