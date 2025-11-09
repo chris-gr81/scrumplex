@@ -29,6 +29,7 @@ import { SquareX } from "lucide-react";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
+import DefinitionOfDoneList from "./DefinitionOfDoneList";
 
 interface UserStoryFormProps {
   edit: boolean;
@@ -193,22 +194,22 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
               Definieren Sie hier bis zu 10 Erfüllungskriterien Ihrer Userstory.
             </FieldDescription>
             <FieldContent>
-              <Input placeholder="1. Erfüllungskriterium"></Input>
-              <Input placeholder="2. Erfüllungskriterium"></Input>
-              <Input placeholder="3. Erfüllungskriterium"></Input>
-              <Input placeholder="4. Erfüllungskriterium"></Input>
-              <Input placeholder="5. Erfüllungskriterium"></Input>
-              <Input placeholder="6. Erfüllungskriterium"></Input>
-              <Input placeholder="7. Erfüllungskriterium"></Input>
-              <Input placeholder="8. Erfüllungskriterium"></Input>
-              <Input placeholder="9. Erfüllungskriterium"></Input>
-              <Input placeholder="10. Erfüllungskriterium"></Input>
+              <Input placeholder="Erfüllungskriterium eintragen"></Input>
+              <DefinitionOfDoneList />
             </FieldContent>
           </Field>
         </FieldGroup>
       </CardContent>
-      <CardFooter className="flex justify-end">
+      <CardFooter className="flex justify-end gap-2">
         <Button>Speichern</Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setActivePanel({ type: "productBacklogList" });
+          }}
+        >
+          Verwerfen
+        </Button>
       </CardFooter>
     </Card>
   );
