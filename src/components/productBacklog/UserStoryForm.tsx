@@ -87,6 +87,12 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
     setDod("");
   };
 
+  const handleDoDPressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleDodClick();
+    }
+  };
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -311,7 +317,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
           <Field>
             <FieldLabel>Definition of Done</FieldLabel>
             <FieldDescription>
-              Definieren Sie hier bis zu 10 Erfüllungskriterien Ihrer Userstory.
+              Definieren Sie hier die Erfüllungskriterien Ihrer Userstory.
             </FieldDescription>
             <FieldContent>
               <div className="flex flex-row gap-4 items-center justify-center ">
@@ -320,6 +326,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                   value={dod}
                   placeholder="Erfüllungskriterium eintragen"
                   onChange={handleDoDEntry}
+                  onKeyDown={handleDoDPressEnter}
                 ></Input>
                 <PlusCircle
                   className="mr-1 cursor-pointer text-foreground/50 hover:text-foreground"
