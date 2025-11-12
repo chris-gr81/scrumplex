@@ -71,7 +71,7 @@ export function DefinitionOfDoneListItem({ props }: { props: DodItemProps }) {
   return (
     <div
       key={index}
-      className="flex flex-row pl-2 mr-2 text-foreground font-normal justify-between"
+      className="flex flex-row pl-2 pb-1 mr-2 mb-1 text-foreground font-normal justify-between border-b-2"
     >
       {!isOpen ? (
         <>
@@ -105,7 +105,7 @@ export function DefinitionOfDoneListItem({ props }: { props: DodItemProps }) {
       ) : (
         <Input
           ref={inputRef}
-          className="m-4"
+          className="m-2"
           autoFocus
           value={item.definition}
           onKeyDown={handleKeyDown}
