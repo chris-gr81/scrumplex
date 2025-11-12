@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { supabase } from "./supabaseClient";
-import type { CurrentProjectType, RoleType } from "@/schemas";
+import type { CurrentProjectType, RoleType, DodItemType } from "@/schemas";
 import type { ZodError } from "zod";
 import { toast } from "sonner";
 
@@ -63,4 +63,14 @@ export const handleZodError = (error: ZodError) => {
       ))}
     </ul>
   );
+};
+
+// cleaning empty rows out of a dod-array
+export const dodCleanUp = (dod: DodItemType[]) => {
+  if (!dod) return [];
+  const newDod = dod.filter((item) => {
+    const checkItem = item.definition.trim();
+    return checkItem !== "" && checkItem !== null && checkItem !== undefined;
+  });
+  return newDod;
 };

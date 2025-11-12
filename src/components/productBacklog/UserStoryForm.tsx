@@ -47,9 +47,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setStory((prev) => ({ ...prev, [name]: value }));
-    console.log(story);
   };
 
   const handleFieldChange = (name: string, value: string) => {
@@ -328,10 +326,6 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                   onChange={handleDoDEntry}
                   onKeyDown={handleDoDPressEnter}
                 ></Input>
-                <PlusCircle
-                  className="mr-1 cursor-pointer text-foreground/50 hover:text-foreground"
-                  onClick={handleDodClick}
-                />
               </div>
               <DefinitionOfDoneList story={story} setStory={setStory} />
             </FieldContent>
