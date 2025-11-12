@@ -25,7 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { SquareX, PlusCircle } from "lucide-react";
+import { SquareX } from "lucide-react";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";

@@ -8,7 +8,6 @@ import type { DodItemType } from "@/schemas";
 interface DodItemProps {
   index: number;
   item: any;
-  openMode: any;
   updateDodList: (
     index: number,
     dodItem: DodItemType,
