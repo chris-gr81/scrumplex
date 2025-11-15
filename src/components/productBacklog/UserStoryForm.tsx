@@ -231,7 +231,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                   <SelectItem value="draft">Entwurf</SelectItem>
                   <SelectItem value="refinement">Verfeinern</SelectItem>
                   <SelectItem value="ready">Sprint-Ready</SelectItem>
-                  <SelectItem value="in-progress">Im Sprint</SelectItem>
+                  <SelectItem value="progress">Im Sprint</SelectItem>
                   <SelectItem value="done">Abgeschlossen</SelectItem>
                   <SelectItem value="discarded">Verworfen</SelectItem>
                 </SelectContent>

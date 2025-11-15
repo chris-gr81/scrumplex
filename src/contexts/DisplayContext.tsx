@@ -39,6 +39,7 @@ export function DisplayProvider({ children }: { children: ReactNode }) {
         return <div>Default Fall</div>;
     }
   };
+
   return (
     <DisplayContext.Provider
       value={{

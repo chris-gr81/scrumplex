@@ -18,7 +18,12 @@ import {
 } from "../ui/card";
 import { useEffect, useState } from "react";
 import { cn, averageInvest, formatDateToEU } from "@/lib/utils";
-import { mockStories } from "@/mocks/stories"; // mock data
+import {
+  priorityMap,
+  statusMap,
+  storypointMap,
+  translateMetrics,
+} from "@/lib/translations";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -35,19 +40,21 @@ export const ProductBacklogList = () => {
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const [isAllOpen, setIsAllOpen] = useState(false);
   const [stories, setStories] = useState<StoryType[] | []>([]);
-  const mocks = mockStories.stories;
 
   useEffect(() => {
     (async () => {
       const res = await fetchStoriesForProject();
       setStories(res);
     })();
-    const initialState = mocks.reduce((acc, story) => {
-      acc[story.id] = false;
-      return acc;
-    }, {} as Record<string, boolean>);
-    setOpenRows(initialState);
   }, []);
+
+  useEffect(() => {
+    if (!stories.length) return;
+    const initialState = Object.fromEntries(
+      stories.map((story) => [story.id, false])
+    );
+    setOpenRows(initialState);
+  }, [stories]);
 
   const toggleAllRowExpansion = () => {
     const rowsArray = Object.entries(openRows);
@@ -110,13 +117,13 @@ export const ProductBacklogList = () => {
             </FtabRow>
           </FtabHeader>
           <FtabBody>
-            {stories.map((storie) => {
+            {stories.map((story) => {
               return (
                 <FtabRow
-                  key={storie.id}
-                  data-row-id={storie.id}
+                  key={story.id}
+                  data-row-id={story.id}
                   subRow={
-                    openRows[storie.id] ? (
+                    openRows[story.id] ? (
                       <div className="flex flex-row pb-2">
                         <div className="basis-[5%]"></div>
                         <ResizablePanelGroup
@@ -127,13 +134,13 @@ export const ProductBacklogList = () => {
                             <p className="font-bold">Story:</p>
                             <p>
                               &bdquo;<span className="font-semibold">Als</span>{" "}
-                              {storie.story_as}{" "}
+                              {story.story_as}{" "}
                               <span className="font-semibold">möchte ich</span>{" "}
-                              {storie.story_like},{" "}
+                              {story.story_like},{" "}
                             </p>
                             <p>
-                              <span className="font-semibold">weil</span>{" "}
-                              {storie.story_cause}
+                              <span className="font-semibold">um</span>{" "}
+                              {story.story_cause}
                               .&ldquo;
                             </p>
                           </ResizablePanel>
@@ -144,7 +151,7 @@ export const ProductBacklogList = () => {
                           >
                             <p className="font-bold">Definition of done:</p>
                             <ul className="list-disc list-inside pl-2">
-                              {storie.definition_of_done.map((dod) => {
+                              {story.definition_of_done.map((dod) => {
                                 return (
                                   <li>
                                     {dod.definition}{" "}
@@ -161,31 +168,37 @@ export const ProductBacklogList = () => {
                 >
                   <FtabCell className="truncate basis-[5%]">
                     <ChevronRight
-                      data-toggle-id={storie.id}
+                      data-toggle-id={story.id}
                       className={cn(
                         "h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground transition-transform duration-200",
-                        openRows[storie.id] && "rotate-90"
+                        openRows[story.id] && "rotate-90"
                       )}
                       onClick={toggleRowExpansion}
                     />
                   </FtabCell>
                   <FtabCell className="truncate basis-[40%]">
-                    {storie.name}
+                    {story.name}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
-                    {formatDateToEU(storie.created_at)}
+                    {formatDateToEU(story.created_at)}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
-                    {averageInvest(storie.invest)}
+                    {averageInvest(story.invest)}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
-                    {storie.storypoints}
+                    {story.storypoints
+                      ? translateMetrics(story.storypoints, storypointMap)
+                      : ""}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
-                    {storie.priority}
+                    {story.priority
+                      ? translateMetrics(story.priority, priorityMap)
+                      : ""}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
-                    {storie.status}
+                    {story.status
+                      ? translateMetrics(story.status, statusMap)
+                      : ""}
                   </FtabCell>
                   <FtabCell className="truncate basis-[5%]">
                     <Pencil
