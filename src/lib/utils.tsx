@@ -1,7 +1,12 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { supabase } from "./supabaseClient";
-import type { CurrentProjectType, RoleType, DodItemType } from "@/schemas";
+import type {
+  CurrentProjectType,
+  RoleType,
+  DodItemType,
+  StoryType,
+} from "@/schemas";
 import type { ZodError } from "zod";
 import { toast } from "sonner";
 
@@ -73,4 +78,30 @@ export const dodCleanUp = (dod: DodItemType[]) => {
     return checkItem !== "" && checkItem !== null && checkItem !== undefined;
   });
   return newDod;
+};
+
+// preparing a story object for db
+export const prepareStoryForDB = (
+  item: StoryType,
+  currentProject: CurrentProjectType
+) => {
+  const { created_at, id, ...rest } = item;
+  return {
+    ...rest,
+    project_id: currentProject,
+    updated_at: new Date().toISOString(),
+  };
+};
+
+export const checkAndSetDefaults = (item: StoryType) => {
+  const checkedPriority = item.priority === "" ? "icebox" : item.priority;
+  const checkedStatus = item.status === "" ? "draft" : item.status;
+  const checkedStorypoints =
+    item.storypoints === "" ? "none" : item.storypoints;
+  return {
+    ...item,
+    priority: checkedPriority,
+    storypoints: checkedStorypoints,
+    status: checkedStatus,
+  };
 };

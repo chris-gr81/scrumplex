@@ -181,7 +181,10 @@ export const ProductBacklogList = () => {
                   <FtabCell className="truncate basis-[5%]">
                     <Pencil
                       onClick={() => {
-                        setActivePanel({ type: "userStory", isEdit: true });
+                        setActivePanel({
+                          type: "userStory",
+                          isEdit: true,
+                        });
                       }}
                       className="h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground"
                     />

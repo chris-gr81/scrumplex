@@ -26,12 +26,15 @@ import {
   CardTitle,
 } from "../ui/card";
 import { SquareX } from "lucide-react";
+import { useProject } from "@/contexts/ProjectContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { Checkbox } from "../ui/checkbox";
 import { Button } from "../ui/button";
 import DefinitionOfDoneList from "./DefinitionOfDoneList";
 import { useState } from "react";
-import { StoryDefault, type StoryType } from "@/schemas";
+import { StoryDefault, StorySchema, type StoryType } from "@/schemas";
+import { checkAndSetDefaults, prepareStoryForDB } from "@/lib/utils";
+import { SelectGroup, SelectLabel } from "@radix-ui/react-select";
 
 interface UserStoryFormProps {
   edit: boolean;
@@ -42,6 +45,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
   const { setActivePanel } = useDisplay();
   const [story, setStory] = useState<StoryType>(StoryDefault);
   const [dod, setDod] = useState("");
+  const { project, insertNewStory } = useProject();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -88,6 +92,25 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
   const handleDoDPressEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleDodClick();
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!project) return;
+
+    const res = StorySchema.safeParse(checkAndSetDefaults(story));
+    if (!res.success) {
+      console.log(res.error);
+      return;
+    }
+    const prepStory = prepareStoryForDB(res.data, project);
+
+    try {
+      const result = await insertNewStory(prepStory);
+      console.log("Insert Story:", result);
+      setActivePanel({ type: "productBacklogList" });
+    } catch (err) {
+      console.error("Submit failed:", err);
     }
   };
 
@@ -167,15 +190,18 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                 }
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Storypoints" />
+                  <SelectValue placeholder="0 - Unbestimmt" />
                   <SelectContent>
-                    <SelectItem value="none">-</SelectItem>
-                    <SelectItem value="trivial">1 - Trivial</SelectItem>
-                    <SelectItem value="small">2 - Klein</SelectItem>
-                    <SelectItem value="medium">3 - Mittel</SelectItem>
-                    <SelectItem value="large">5 - Komplex</SelectItem>
-                    <SelectItem value="xl">8 - Groß</SelectItem>
-                    <SelectItem value="epic">13 - Epic</SelectItem>
+                    <SelectGroup>
+                      <SelectLabel>Storypoints</SelectLabel>
+                      <SelectItem value="none">0 - Unbestimmt</SelectItem>
+                      <SelectItem value="trivial">1 - Trivial</SelectItem>
+                      <SelectItem value="small">2 - Klein</SelectItem>
+                      <SelectItem value="medium">3 - Mittel</SelectItem>
+                      <SelectItem value="large">5 - Komplex</SelectItem>
+                      <SelectItem value="xl">8 - Groß</SelectItem>
+                      <SelectItem value="epic">13 - Epic</SelectItem>
+                    </SelectGroup>
                   </SelectContent>
                 </SelectTrigger>
               </Select>
@@ -333,7 +359,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
         </FieldGroup>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button>Speichern</Button>
+        <Button onClick={handleSubmit}>Speichern</Button>
         <Button
           variant="outline"
           onClick={() => {

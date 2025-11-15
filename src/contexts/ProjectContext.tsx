@@ -8,6 +8,7 @@ import {
   type NewProjectMemberType,
   type ProjectMembersRow,
   type ProjectRow,
+  type StoryType,
 } from "@/schemas";
 import {
   useContext,
@@ -34,6 +35,7 @@ type ProjectContextValue = {
   ) => Promise<ProjectRow | null>;
   updateCurrentProjectToDb: (currentId: string) => Promise<void>;
   getAllProjectsForUser: () => any;
+  insertNewStory: (story: any) => Promise<any>;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -152,6 +154,34 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     return data;
   };
 
+  const insertNewStory = async (story: StoryType) => {
+    if (auth.status !== "ready") return;
+    const { invest, ...userstories } = story;
+    const { data: storyData, error: storyError } = await supabase
+      .from("userstories")
+      .insert(userstories)
+      .select("id")
+      .single();
+
+    if (storyError) {
+      console.error("Insert userstory failed:", storyError);
+      return;
+    }
+    if (!storyData?.id) return;
+
+    console.log("Story inserted, new Id:", storyData.id);
+    const { id, ...rest } = invest;
+    const prepInvest = { ...rest, userstory_id: storyData.id };
+
+    const { error: investError } = await supabase
+      .from("invest")
+      .insert(prepInvest)
+      .select()
+      .single();
+
+    if (investError) console.error("Insert invest failed:", investError);
+  };
+
   return (
     <ProjectContext.Provider
       value={{
@@ -162,6 +192,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         getCurrentProject,
         updateCurrentProjectToDb,
         getAllProjectsForUser,
+        insertNewStory,
       }}
     >
       {children}

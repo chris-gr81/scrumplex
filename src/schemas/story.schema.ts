@@ -12,8 +12,8 @@ export const DodItemSchema = z.object({
 });
 
 export const InvestSchema = z.object({
-  id: idSchema,
-  userstory_id: idSchema,
+  id: idSchema.or(z.literal("")),
+  userstory_id: idSchema.or(z.literal("")),
   independent_check: z.boolean().optional(),
   independent_rate: z.number().nullable().optional(),
   negotiable_check: z.boolean().optional(),
@@ -29,18 +29,18 @@ export const InvestSchema = z.object({
 });
 
 export const StorySchema = z.object({
-  id: idSchema,
-  created_at: timeStampSchema.optional(),
-  project_id: idSchema.optional(),
+  id: idSchema.or(z.literal("")),
+  created_at: timeStampSchema.optional().or(z.literal("")),
+  project_id: idSchema.optional().or(z.literal("")),
   name: shortTextSchema.optional(),
   invest: InvestSchema,
-  storypoints: z.string().optional(),
+  storypoints: shortTextSchema.optional(),
   priority: shortTextSchema.optional(),
   status: shortTextSchema.optional(),
   story_as: userStorySchema.optional(),
   story_like: userStorySchema.optional(),
   story_cause: userStorySchema.optional(),
-  updated_at: timeStampSchema.optional(),
+  updated_at: timeStampSchema.optional().or(z.literal("")),
   definition_of_done: z.array(DodItemSchema).default([]),
 });
 
