@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, averageInvest, formatDateToEU } from "@/lib/utils";
 import { mockStories } from "@/mocks/stories"; // mock data
 import {
   ResizableHandle,
@@ -26,14 +26,22 @@ import {
 } from "../ui/resizable";
 
 import { useDisplay } from "@/contexts/DisplayContext";
+import { useProject } from "@/contexts/ProjectContext";
+import { type StoryType } from "@/schemas";
 
 export const ProductBacklogList = () => {
   const { setActivePanel } = useDisplay();
+  const { fetchStoriesForProject } = useProject();
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const [isAllOpen, setIsAllOpen] = useState(false);
+  const [stories, setStories] = useState<StoryType[] | []>([]);
   const mocks = mockStories.stories;
 
   useEffect(() => {
+    (async () => {
+      const res = await fetchStoriesForProject();
+      setStories(res);
+    })();
     const initialState = mocks.reduce((acc, story) => {
       acc[story.id] = false;
       return acc;
@@ -49,6 +57,7 @@ export const ProductBacklogList = () => {
     setOpenRows(Object.fromEntries(newRows));
 
     setIsAllOpen(!isAllOpen);
+    console.log(stories);
   };
 
   const toggleRowExpansion = (e: React.MouseEvent<SVGSVGElement>) => {
@@ -101,7 +110,7 @@ export const ProductBacklogList = () => {
             </FtabRow>
           </FtabHeader>
           <FtabBody>
-            {mocks.map((storie) => {
+            {stories.map((storie) => {
               return (
                 <FtabRow
                   key={storie.id}
@@ -164,10 +173,10 @@ export const ProductBacklogList = () => {
                     {storie.name}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
-                    {storie.created_at}
+                    {formatDateToEU(storie.created_at)}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
-                    {storie.invest}
+                    {averageInvest(storie.invest)}
                   </FtabCell>
                   <FtabCell className="truncate basis-[10%]">
                     {storie.storypoints}

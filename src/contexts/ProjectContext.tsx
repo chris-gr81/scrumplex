@@ -36,6 +36,7 @@ type ProjectContextValue = {
   updateCurrentProjectToDb: (currentId: string) => Promise<void>;
   getAllProjectsForUser: () => any;
   insertNewStory: (story: any) => Promise<any>;
+  fetchStoriesForProject: () => Promise<any>;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -182,6 +183,21 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     if (investError) console.error("Insert invest failed:", investError);
   };
 
+  const fetchStoriesForProject = async () => {
+    if (auth.status !== "ready") return;
+    const { data, error } = await supabase
+      .from("userstories")
+      .select("*, invest(*)")
+      .eq("project_id", project);
+
+    if (error) {
+      console.error("Fetch stories failed:", error);
+      return [];
+    }
+    console.log(data);
+    return data;
+  };
+
   return (
     <ProjectContext.Provider
       value={{
@@ -193,6 +209,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         updateCurrentProjectToDb,
         getAllProjectsForUser,
         insertNewStory,
+        fetchStoriesForProject,
       }}
     >
       {children}

@@ -105,3 +105,16 @@ export const checkAndSetDefaults = (item: StoryType) => {
     status: checkedStatus,
   };
 };
+
+export const averageInvest = (invest: any) => {
+  const {
+    estimable_rate: est,
+    independent_rate: ind,
+    negotiable_rate: neg,
+    small_rate: sma,
+    testable_rate: tes,
+    valuable_rate: val,
+  } = invest;
+
+  return Math.round((est + ind + neg + sma + tes + val) / 6);
+};
