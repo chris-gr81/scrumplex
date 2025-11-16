@@ -33,7 +33,7 @@ export default function Dashboard() {
     ? {
         title: projectData.name,
         description: projectData.goal,
-        date: formatDateToEU(projectData.created_at),
+        date: formatDateToEU(projectData.created_at, false),
         isProject: true,
       }
     : {

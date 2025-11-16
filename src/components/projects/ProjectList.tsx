@@ -97,7 +97,7 @@ export const ProjectList = () => {
                 <TableCell className="truncate w-3/10">{p.name}</TableCell>
                 <TableCell className="truncate max-w-3/10">{p.goal}</TableCell>
                 <TableCell className="truncate w-1/10">
-                  {formatDateToEU(p.created_at)}
+                  {formatDateToEU(p.created_at, false)}
                 </TableCell>
                 <TableCell className="truncate w-2/10">{p.ownerName}</TableCell>
                 <TableCell className="truncate w-1/10">
