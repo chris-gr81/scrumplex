@@ -4,6 +4,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectLabel,
 } from "../ui/select";
 import {
   Field,
@@ -34,7 +36,6 @@ import DefinitionOfDoneList from "./DefinitionOfDoneList";
 import { useState } from "react";
 import { StoryDefault, StorySchema, type StoryType } from "@/schemas";
 import { checkAndSetDefaults, prepareStoryForDB } from "@/lib/utils";
-import { SelectGroup, SelectLabel } from "@radix-ui/react-select";
 
 interface UserStoryFormProps {
   edit: boolean;
@@ -233,11 +234,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                   <SelectValue placeholder="Priorität" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="must">Pflicht</SelectItem>
-                  <SelectItem value="high">Hoch</SelectItem>
-                  <SelectItem value="medium">Mittel</SelectItem>
-                  <SelectItem value="low">Niedrig</SelectItem>
-                  <SelectItem value="icebox">Icebox</SelectItem>
+                  <SelectGroup>
+                    <SelectLabel>Priorität</SelectLabel>
+                    <SelectItem value="must">Pflicht</SelectItem>
+                    <SelectItem value="high">Hoch</SelectItem>
+                    <SelectItem value="medium">Mittel</SelectItem>
+                    <SelectItem value="low">Niedrig</SelectItem>
+                    <SelectItem value="icebox">Icebox</SelectItem>
+                  </SelectGroup>
                 </SelectContent>
               </Select>
               <Select
@@ -248,12 +252,15 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="draft">Entwurf</SelectItem>
-                  <SelectItem value="refinement">Verfeinern</SelectItem>
-                  <SelectItem value="ready">Sprint-Ready</SelectItem>
-                  <SelectItem value="progress">Im Sprint</SelectItem>
-                  <SelectItem value="done">Abgeschlossen</SelectItem>
-                  <SelectItem value="discarded">Verworfen</SelectItem>
+                  <SelectGroup>
+                    <SelectLabel>Status</SelectLabel>
+                    <SelectItem value="draft">Entwurf</SelectItem>
+                    <SelectItem value="refinement">Verfeinern</SelectItem>
+                    <SelectItem value="ready">Sprint-Ready</SelectItem>
+                    <SelectItem value="progress">Im Sprint</SelectItem>
+                    <SelectItem value="done">Abgeschlossen</SelectItem>
+                    <SelectItem value="discarded">Verworfen</SelectItem>
+                  </SelectGroup>
                 </SelectContent>
               </Select>
             </FieldContent>
