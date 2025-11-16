@@ -3,13 +3,14 @@ import NewProject from "@/components/projects/NewProject";
 import ProjectList from "@/components/projects/ProjectList";
 import UserStoryForm from "@/components/productBacklog/UserStoryForm";
 import { useContext, createContext, useState, type ReactNode } from "react";
+import type { StoryType } from "@/schemas";
 
 type PanelState =
   | { type: "empty" }
   | { type: "newProject" }
   | { type: "projectList" }
   | { type: "productBacklogList" }
-  | { type: "userStory"; isEdit: boolean };
+  | { type: "userStory"; isEdit: boolean; payload?: StoryType };
 
 type DisplayContextValue = {
   getActivePanel: () => ReactNode;
@@ -34,7 +35,12 @@ export function DisplayProvider({ children }: { children: ReactNode }) {
       case "productBacklogList":
         return <ProductBacklogList />;
       case "userStory":
-        return <UserStoryForm edit={activePanel.isEdit} />;
+        return (
+          <UserStoryForm
+            edit={activePanel.isEdit}
+            payload={activePanel.payload}
+          />
+        );
       default:
         return <div>Default Fall</div>;
     }

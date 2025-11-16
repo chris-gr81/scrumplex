@@ -38,15 +38,17 @@ import { SelectGroup, SelectLabel } from "@radix-ui/react-select";
 
 interface UserStoryFormProps {
   edit: boolean;
+  payload?: StoryType;
 }
 
 export const UserStoryForm = (props: UserStoryFormProps) => {
-  const { edit } = props;
+  const { edit, payload } = props;
   const { setActivePanel } = useDisplay();
-  const [story, setStory] = useState<StoryType>(StoryDefault);
+  const [story, setStory] = useState<StoryType>(payload ?? StoryDefault);
   const [dod, setDod] = useState("");
-  const { project, insertNewStory } = useProject();
+  const { project, insertNewStory, updateStory } = useProject();
 
+  console.log(payload);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -95,7 +97,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmitNew = async () => {
     if (!project) return;
 
     const res = StorySchema.safeParse(checkAndSetDefaults(story));
@@ -111,6 +113,23 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
       setActivePanel({ type: "productBacklogList" });
     } catch (err) {
       console.error("Submit failed:", err);
+    }
+  };
+
+  const handleSubmitUpdate = async () => {
+    if (!project) return;
+
+    const res = StorySchema.safeParse(story);
+    if (!res.success) {
+      console.log(res.error);
+      return;
+    }
+    try {
+      const result = await updateStory(res.data);
+      console.log("Upadate Story:", result);
+      setActivePanel({ type: "productBacklogList" });
+    } catch (err) {
+      console.error("Update failed:", err);
     }
   };
 
@@ -359,7 +378,9 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
         </FieldGroup>
       </CardContent>
       <CardFooter className="flex justify-end gap-2">
-        <Button onClick={handleSubmit}>Speichern</Button>
+        <Button onClick={story.id ? handleSubmitUpdate : handleSubmitNew}>
+          Speichern
+        </Button>
         <Button
           variant="outline"
           onClick={() => {

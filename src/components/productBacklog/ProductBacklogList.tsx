@@ -206,6 +206,7 @@ export const ProductBacklogList = () => {
                         setActivePanel({
                           type: "userStory",
                           isEdit: true,
+                          payload: story,
                         });
                       }}
                       className="h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground"

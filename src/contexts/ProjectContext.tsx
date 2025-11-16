@@ -36,6 +36,7 @@ type ProjectContextValue = {
   updateCurrentProjectToDb: (currentId: string) => Promise<void>;
   getAllProjectsForUser: () => any;
   insertNewStory: (story: any) => Promise<any>;
+  updateStory: (story: any) => Promise<any>;
   fetchStoriesForProject: () => Promise<any>;
 };
 
@@ -157,10 +158,10 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
 
   const insertNewStory = async (story: StoryType) => {
     if (auth.status !== "ready") return;
-    const { invest, ...userstories } = story;
+    const { invest, ...userstory } = story;
     const { data: storyData, error: storyError } = await supabase
       .from("userstories")
-      .insert(userstories)
+      .insert(userstory)
       .select("id")
       .single();
 
@@ -181,6 +182,27 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       .single();
 
     if (investError) console.error("Insert invest failed:", investError);
+  };
+
+  const updateStory = async (story: StoryType) => {
+    if (auth.status !== "ready") return;
+    const { invest, ...userstory } = story;
+    const { error: errorUse } = await supabase
+      .from("userstories")
+      .update(userstory)
+      .eq("id", userstory.id);
+    if (errorUse) {
+      console.error("Update userstory failed:", errorUse);
+      return;
+    }
+    const { error: errorInv } = await supabase
+      .from("invest")
+      .update(invest)
+      .eq("id", invest.id);
+    if (errorInv) {
+      console.error("Update invest failed:", errorInv);
+      return;
+    }
   };
 
   const fetchStoriesForProject = async () => {
@@ -210,6 +232,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         getAllProjectsForUser,
         insertNewStory,
         fetchStoriesForProject,
+        updateStory,
       }}
     >
       {children}
