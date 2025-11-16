@@ -118,6 +118,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
 
   const handleSubmitUpdate = async () => {
     if (!project) return;
+    story.updated_at = new Date().toISOString();
 
     const res = StorySchema.safeParse(story);
     if (!res.success) {

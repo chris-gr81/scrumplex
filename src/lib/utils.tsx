@@ -50,12 +50,21 @@ export const loadCurrentProject = async (
 };
 
 // formating dates to european style dd.mm.yyyy
-export const formatDateToEU = (dateString: string | undefined): string => {
+export const formatDateToEU = (
+  dateString: string | undefined,
+  includeTime: boolean
+): string => {
   const date = new Date(dateString ? dateString : Date.now());
+
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
+  if (!includeTime) {
+    return `${day}.${month}.${year}`;
+  }
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
 };
 
 // formating zod errors to toaster-ready-messages

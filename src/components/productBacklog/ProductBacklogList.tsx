@@ -33,6 +33,7 @@ import {
 import { useDisplay } from "@/contexts/DisplayContext";
 import { useProject } from "@/contexts/ProjectContext";
 import { type StoryType } from "@/schemas";
+import { sortStories } from "@/lib/sorts";
 
 export const ProductBacklogList = () => {
   const { setActivePanel } = useDisplay();
@@ -44,7 +45,7 @@ export const ProductBacklogList = () => {
   useEffect(() => {
     (async () => {
       const res = await fetchStoriesForProject();
-      setStories(res);
+      setStories(sortStories(res));
     })();
   }, []);
 
@@ -107,9 +108,12 @@ export const ProductBacklogList = () => {
                   )}
                 />
               </FtabHead>
-              <FtabHead className="truncate basis-[40%]">Story-Name</FtabHead>
-              <FtabHead className="truncate basis-[10%]">Erstellt am:</FtabHead>
-              <FtabHead className="truncate basis-[10%]">INVEST in %</FtabHead>
+              <FtabHead className="truncate basis-[30%]">Story-Name</FtabHead>
+              <FtabHead className="truncate basis-[10%]">Erstellt:</FtabHead>
+              <FtabHead className="truncate basis-[10%]">
+                Letztes Update:
+              </FtabHead>
+              <FtabHead className="truncate basis-[10%]">INVEST</FtabHead>
               <FtabHead className="truncate basis-[10%]">Storypoints</FtabHead>
               <FtabHead className="truncate basis-[10%]">Priorität</FtabHead>
               <FtabHead className="truncate basis-[10%]">Status</FtabHead>
@@ -118,6 +122,10 @@ export const ProductBacklogList = () => {
           </FtabHeader>
           <FtabBody>
             {stories.map((story) => {
+              const isInactive =
+                story.status === "done" || story.status === "discarded"
+                  ? true
+                  : false;
               return (
                 <FtabRow
                   key={story.id}
@@ -176,26 +184,64 @@ export const ProductBacklogList = () => {
                       onClick={toggleRowExpansion}
                     />
                   </FtabCell>
-                  <FtabCell className="truncate basis-[40%]">
+                  <FtabCell
+                    className={cn(
+                      "truncate basis-[30%]",
+                      isInactive ? "text-foreground/30 line-through" : null
+                    )}
+                  >
                     {story.name}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[10%]">
-                    {formatDateToEU(story.created_at)}
+                  <FtabCell
+                    className={cn(
+                      "truncate basis-[10%]",
+                      isInactive ? "text-foreground/30 line-through" : null
+                    )}
+                  >
+                    {formatDateToEU(story.created_at, false)}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[10%]">
-                    {averageInvest(story.invest)}
+                  <FtabCell
+                    className={cn(
+                      "truncate basis-[10%]",
+                      isInactive ? "text-foreground/30 line-through" : null
+                    )}
+                  >
+                    {formatDateToEU(story.updated_at, true)}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[10%]">
+                  <FtabCell
+                    className={cn(
+                      "truncate basis-[10%]",
+                      isInactive ? "text-foreground/30 line-through" : null
+                    )}
+                  >
+                    {`${averageInvest(story.invest)} %`}
+                  </FtabCell>
+                  <FtabCell
+                    className={cn(
+                      "truncate basis-[10%]",
+                      isInactive ? "text-foreground/30 line-through" : null
+                    )}
+                  >
                     {story.storypoints
                       ? translateMetrics(story.storypoints, storypointMap)
                       : ""}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[10%]">
+                  <FtabCell
+                    className={cn(
+                      "truncate basis-[10%]",
+                      isInactive ? "text-foreground/30 line-through" : null
+                    )}
+                  >
                     {story.priority
                       ? translateMetrics(story.priority, priorityMap)
                       : ""}
                   </FtabCell>
-                  <FtabCell className="truncate basis-[10%]">
+                  <FtabCell
+                    className={cn(
+                      "truncate basis-[10%]",
+                      isInactive ? "text-foreground/30 line-through" : null
+                    )}
+                  >
                     {story.status
                       ? translateMetrics(story.status, statusMap)
                       : ""}

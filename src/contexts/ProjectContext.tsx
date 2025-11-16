@@ -210,7 +210,8 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase
       .from("userstories")
       .select("*, invest(*)")
-      .eq("project_id", project);
+      .eq("project_id", project)
+      .order("updated_at", { ascending: false });
 
     if (error) {
       console.error("Fetch stories failed:", error);
