@@ -1,4 +1,4 @@
-import { ChevronRight, Pencil } from "lucide-react";
+import { ChevronRight, Pencil, CircleCheck, CircleDashed } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   Ftab,
@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useEffect, useState } from "react";
-import { cn, averageInvest, formatDateToEU } from "@/lib/utils";
+import { cn, averageInvest, formatDateToEU, cleanString } from "@/lib/utils";
 import {
   priorityMap,
   statusMap,
@@ -138,32 +138,98 @@ export const ProductBacklogList = () => {
                           direction="horizontal"
                           className="basis-[95%] pr-2"
                         >
-                          <ResizablePanel defaultSize={50}>
-                            <p className="font-bold">Story:</p>
+                          <ResizablePanel defaultSize={33}>
+                            <p className="font-bold text-foreground">Story:</p>
                             <p>
-                              &bdquo;<span className="font-semibold">Als</span>{" "}
-                              {story.story_as}{" "}
-                              <span className="font-semibold">möchte ich</span>{" "}
-                              {story.story_like},{" "}
+                              <span className="font-semibold text-emerald-700">
+                                &bdquo;Als
+                              </span>{" "}
+                              <span className="text-foreground">
+                                {cleanString(story.story_as)}{" "}
+                              </span>
+                              <span className="font-semibold text-emerald-700">
+                                möchte ich
+                              </span>{" "}
+                              <span className="text-foreground">
+                                {cleanString(story.story_like)},{" "}
+                              </span>
                             </p>
                             <p>
-                              <span className="font-semibold">um</span>{" "}
-                              {story.story_cause}
-                              .&ldquo;
+                              <span className="font-semibold text-emerald-700">
+                                um
+                              </span>{" "}
+                              <span className="text-foreground">
+                                {cleanString(story.story_cause)}.&ldquo;
+                              </span>
                             </p>
                           </ResizablePanel>
                           <ResizableHandle />
                           <ResizablePanel
-                            defaultSize={50}
+                            defaultSize={33}
                             className="pl-2 pr-2"
                           >
-                            <p className="font-bold">Definition of done:</p>
+                            <p className="font-bold text-foreground">Invest:</p>
+                            <ul className="list-inside pl-2">
+                              {[
+                                "Independent",
+                                "Negotiable",
+                                "Valuable",
+                                "Estimable",
+                                "Small",
+                                "Testable",
+                              ].map((item) => {
+                                const key =
+                                  `${item.toLowerCase()}_check` as keyof typeof story.invest;
+                                return (
+                                  <li
+                                    key={item}
+                                    className="flex flex-row items-center gap-2"
+                                  >
+                                    {story.invest[key] ? (
+                                      <CircleCheck className="h-4 text-emerald-700" />
+                                    ) : (
+                                      <CircleDashed className="h-4" />
+                                    )}
+                                    <span
+                                      className={cn(
+                                        story.invest[key]
+                                          ? "text-foreground"
+                                          : null
+                                      )}
+                                    >
+                                      {item}
+                                    </span>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </ResizablePanel>
+                          <ResizableHandle />
+                          <ResizablePanel
+                            defaultSize={33}
+                            className="pl-2 pr-2"
+                          >
+                            <p className="font-bold text-foreground">
+                              Definition of done:
+                            </p>
                             <ul className="list-disc list-inside pl-2">
                               {story.definition_of_done.map((dod) => {
                                 return (
-                                  <li>
-                                    {dod.definition}{" "}
-                                    {dod.done ? "(abgeschlossen)" : "(offen)"}
+                                  <li className="flex flex-row gap-2 items-center">
+                                    {dod.done ? (
+                                      <CircleCheck className="h-4 text-emerald-700" />
+                                    ) : (
+                                      <CircleDashed className="h-4 text-foreground" />
+                                    )}
+                                    <span
+                                      className={cn(
+                                        dod.done
+                                          ? "line-through"
+                                          : "text-foreground"
+                                      )}
+                                    >
+                                      {dod.definition}
+                                    </span>
                                   </li>
                                 );
                               })}

@@ -67,6 +67,11 @@ export const formatDateToEU = (
   return `${day}.${month}.${year} ${hours}:${minutes}`;
 };
 
+// formating strings
+export const cleanString = (str?: string): string => {
+  return (str ?? "").trim().replace(/[^\p{L}\p{N}]+$/u, "");
+};
+
 // formating zod errors to toaster-ready-messages
 export const handleZodError = (error: ZodError) => {
   toast.error(
