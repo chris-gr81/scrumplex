@@ -1,4 +1,4 @@
-import { FolderKanban, Home, Settings } from "lucide-react";
+import { FolderKanban, Home, Settings, ClipboardList } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "../assets/scrumplex_logo.png";
@@ -27,21 +27,24 @@ export function AppLayout() {
           <nav className="flex-1 px-3 py-5 space-y-1">
             <div
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
-              onClick={() => setActivePanel({ type: "productBacklogList" })}
+              onClick={() => setActivePanel({ type: "dashboard" })}
             >
-              <Home className="w-5 h-5" />
+              <Home className="w-5 h-5 text-emerald-100" />
               <p>Dashboard</p>
             </div>
             <div
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
               onClick={() => setActivePanel({ type: "projectList" })}
             >
-              <FolderKanban className="w-5 h-5" />
+              <FolderKanban className="w-5 h-5 text-emerald-100" />
               <span>Projekte</span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer">
-              <Settings className="w-5 h-5" />
-              <span>Einstellungen</span>
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
+              onClick={() => setActivePanel({ type: "productBacklogList" })}
+            >
+              <ClipboardList className="w-5 h-5 text-emerald-100" />
+              <span>Product Backlog</span>
             </div>
           </nav>
           <div className="p-4 text-xs text-zinc-400 border-t border-zinc-600">
@@ -58,10 +61,16 @@ export function AppLayout() {
               {auth.status === "ready" ? auth.profile.first_name : undefined}!
             </div>
             <div className="flex items-center gap-3">
-              <Button onClick={() => setActivePanel({ type: "newProject" })}>
+              {/*< Button onClick={() => setActivePanel({ type: "newProject" })}>
                 Neues Projekt
+              </>*/}
+              <Button
+                variant="outline"
+                className="bg-zinc-800 hover:bg-zinc-700 hover:text-zinc-200"
+                onClick={logout}
+              >
+                Logout
               </Button>
-              <Button onClick={logout}>Logout</Button>
             </div>
           </header>
 

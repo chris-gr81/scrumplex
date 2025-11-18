@@ -4,9 +4,10 @@ import ProjectList from "@/components/projects/ProjectList";
 import UserStoryForm from "@/components/productBacklog/UserStoryForm";
 import { useContext, createContext, useState, type ReactNode } from "react";
 import type { StoryType } from "@/schemas";
+import Dashboard from "@/components/dashboard/Dashboard";
 
 type PanelState =
-  | { type: "empty" }
+  | { type: "dashboard" }
   | { type: "newProject" }
   | { type: "projectList" }
   | { type: "productBacklogList" }
@@ -22,12 +23,14 @@ const DisplayContext = createContext<DisplayContextValue | undefined>(
 );
 
 export function DisplayProvider({ children }: { children: ReactNode }) {
-  const [activePanel, setActivePanel] = useState<PanelState>({ type: "empty" });
+  const [activePanel, setActivePanel] = useState<PanelState>({
+    type: "dashboard",
+  });
 
   const getActivePanel = (): ReactNode => {
     switch (activePanel.type) {
-      case "empty":
-        return <div>Kein Inhalt</div>;
+      case "dashboard":
+        return <Dashboard />;
       case "newProject":
         return <NewProject />;
       case "projectList":

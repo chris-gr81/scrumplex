@@ -38,7 +38,7 @@ export default function Root() {
       location.pathname === "/login" ||
       location.pathname === "/onboarding")
   ) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/workspace" replace />;
   }
   return <Outlet />;
 }

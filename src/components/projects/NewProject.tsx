@@ -26,6 +26,7 @@ import { useProject } from "@/contexts/ProjectContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { toast } from "sonner";
+import { SquareX } from "lucide-react";
 
 export default function NewProject() {
   const {
@@ -68,13 +69,13 @@ export default function NewProject() {
 
       const message =
         'Das Projekt "' + resProject.name + '" wurde erfolgreich angelegt.';
-      setActivePanel({ type: "empty" });
+      setActivePanel({ type: "dashboard" });
       toast["success"](message);
     }
   };
 
   return (
-    <Card className="w-full max-w-6xl">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Neues Projekt anlegen</CardTitle>
         <CardDescription>
@@ -82,9 +83,13 @@ export default function NewProject() {
           Sie werden als Product Owner gesetzt.
         </CardDescription>
         <CardAction>
-          <Button type="submit" form="new-project-form">
-            Projekt anlegen
-          </Button>
+          {" "}
+          <SquareX
+            className="cursor-pointer text-foreground/50 hover:text-foreground"
+            onClick={() => {
+              setActivePanel({ type: "projectList" });
+            }}
+          />
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-row justify-center">
@@ -137,7 +142,20 @@ export default function NewProject() {
           </FieldGroup>
         </form>
       </CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter className="flex justify-end gap-2">
+        {" "}
+        <Button type="submit" form="new-project-form">
+          Speichern
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setActivePanel({ type: "projectList" });
+          }}
+        >
+          Verwerfen
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

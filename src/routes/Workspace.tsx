@@ -8,7 +8,7 @@ import type { ProjectRow } from "@/schemas";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 
-export default function Dashboard() {
+export default function Workspace() {
   const { auth } = useAuth();
   const { project, getCurrentProject } = useProject();
   const { getActivePanel } = useDisplay();

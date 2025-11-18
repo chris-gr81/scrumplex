@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import Root from "./routes/Root";
-import Dashboard from "./routes/Dashboard";
+import Workspace from "./routes/Workspace";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LoginForm } from "./components/login-form";
 import ProfileCard from "./components/ProfileCard";
@@ -26,8 +26,8 @@ function App() {
           {
             element: <AppLayout />,
             children: [
-              { index: true, element: <Navigate to="/dashboard" replace /> },
-              { path: "dashboard", element: <Dashboard /> },
+              { index: true, element: <Navigate to="/workspace" replace /> },
+              { path: "workspace", element: <Workspace /> },
             ],
           },
         ],

@@ -21,6 +21,7 @@ import type { ProjectListType } from "@/schemas";
 import { formatDateToEU } from "@/lib/utils";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
 
 export const ProjectList = () => {
   const [projects, setProjects] = useState<ProjectListType>([]);
@@ -66,10 +67,15 @@ export const ProjectList = () => {
           auswählen, indem Sie auf die entsprechende Zeile klicken.
         </CardDescription>
         <CardAction>
-          <SquareX
-            className="cursor-pointer text-foreground/50 hover:text-foreground"
-            onClick={() => setActivePanel({ type: "productBacklogList" })}
-          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setActivePanel({ type: "newProject" });
+            }}
+          >
+            <span className="text-xs">Projekt anlegen</span>
+          </Button>
         </CardAction>
       </CardHeader>
       <CardContent>
