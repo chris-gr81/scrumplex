@@ -49,7 +49,11 @@ export default function NewProject() {
       goal: projectGoal,
       finished: false,
     });
-    const projectId = resProject.id;
+
+    if (!resProject.success) {
+      return;
+    }
+    const projectId = resProject.data.id;
     const profileId = auth.profile.id;
     const roleId = roles?.find((r) => {
       return r.name === "Product Owner";
@@ -63,13 +67,15 @@ export default function NewProject() {
     });
 
     if (resProjectMembers && resProject) {
-      setCurrentProject(resProject.id);
-      await updateCurrentProjectToDb(resProject.id);
+      setCurrentProject(resProject.data.id);
+      await updateCurrentProjectToDb(resProject.data.id);
       if (project) console.log("Sucess, here is the project", project);
 
       const message =
-        'Das Projekt "' + resProject.name + '" wurde erfolgreich angelegt.';
-      setActivePanel({ type: "dashboard" });
+        'Das Projekt "' +
+        resProject.data.name +
+        '" wurde erfolgreich angelegt.';
+      setActivePanel({ type: "projectList" });
       toast["success"](message);
     }
   };

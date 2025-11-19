@@ -1,4 +1,4 @@
-import { FolderKanban, Home, Settings, ClipboardList } from "lucide-react";
+import { FolderKanban, Home, ClipboardList } from "lucide-react";
 import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import logo from "../assets/scrumplex_logo.png";

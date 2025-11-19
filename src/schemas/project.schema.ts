@@ -2,14 +2,14 @@ import { z } from "zod";
 import {
   idSchema,
   projectGoalSchema,
-  shortTextSchema,
+  projectNameSchema,
   timeStampSchema,
 } from "@/schemas";
 
 export const ProjectSchema = z.object({
   id: idSchema,
   created_at: timeStampSchema,
-  name: shortTextSchema,
+  name: projectNameSchema,
   goal: projectGoalSchema,
   finished: z.boolean(),
   owner_id: idSchema.optional(),

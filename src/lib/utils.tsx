@@ -74,13 +74,16 @@ export const cleanString = (str?: string): string => {
 
 // formating zod errors to toaster-ready-messages
 export const handleZodError = (error: ZodError) => {
+  console.log(error);
   toast.error(
-    <ul>
-      <strong>Üngültige Eingabe:</strong>
-      {error.issues.map((issue, i) => (
-        <li key={i}>{issue.message}</li>
-      ))}
-    </ul>
+    <div>
+      <strong>Ungültige Eingabe:</strong>
+      <ul className="mt-1 ml-4 list-disc">
+        {error.issues.map((issue, i) => (
+          <li key={i}>{issue.message}</li>
+        ))}
+      </ul>
+    </div>
   );
 };
 

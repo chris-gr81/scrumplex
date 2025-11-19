@@ -52,7 +52,27 @@ export const longTextSchema = z
   .max(10000)
   .optional()
   .nullable();
-export const projectGoalSchema = z.string().trim().min(20).max(3000);
+
+export const projectGoalSchema = z
+  .string()
+  .trim()
+  .min(20, {
+    message: "Das Projektziel muss aus mindestens 20 Zeichen bestehen.",
+  })
+  .max(3000, {
+    message: "Das Projektziel darf aus maximal 3000 Zeichen bestehen.",
+  });
+
+export const projectNameSchema = z
+  .string()
+  .trim()
+  .min(2, {
+    message: "Der Projektname muss aus mindestens 2 Buchstaben bestehen.",
+  })
+  .max(120, {
+    message: "Der Projektname darf aus maximal 20 Zeichen bestehen.",
+  });
+
 export const userStorySchema = z.string().trim().min(2).max(1000);
 export const commentSchema = z.string().trim().min(1).max(2000);
 

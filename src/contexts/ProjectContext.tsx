@@ -1,12 +1,11 @@
 import { supabase } from "@/lib/supabaseClient";
-import { loadCurrentProject } from "@/lib/utils";
+import { handleZodError, loadCurrentProject } from "@/lib/utils";
 import {
   CurrentProjectSchema,
   NewProjectMemberSchema,
   NewProjectSchema,
   type CurrentProjectType,
   type NewProjectMemberType,
-  type ProjectMembersRow,
   type ProjectRow,
   type StoryType,
 } from "@/schemas";
@@ -22,13 +21,17 @@ import { useAuth } from "./AuthContext";
 export type ProjectPatch = Partial<
   Pick<ProjectRow, "name" | "goal" | "finished">
 >;
+type ProjectResult = { success: true; data: ProjectRow } | { success: false };
+type ProjectMembersResult =
+  | { success: true; data: NewProjectMemberType }
+  | { success: false };
 
 type ProjectContextValue = {
   project: CurrentProjectType | null;
-  createProject: (patch: ProjectPatch) => Promise<ProjectRow>;
+  createProject: (patch: ProjectPatch) => Promise<ProjectResult>;
   createProjectMembers: (
     patch: NewProjectMemberType
-  ) => Promise<ProjectMembersRow>; // TODO ;)
+  ) => Promise<ProjectMembersResult>; // TODO ;)
   setCurrentProject: (projectId: CurrentProjectType) => void;
   getCurrentProject: (
     currentId: CurrentProjectType
@@ -78,10 +81,10 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     });
 
     if (!parseResult.success) {
-      console.error("Validation error in createProject: ", parseResult.error);
-      // TODO: Error handling
-      return parseResult.error;
+      handleZodError(parseResult.error);
+      return { success: false } satisfies ProjectResult;
     }
+
     const payload = parseResult.data;
     const { data, error } = await supabase
       .from("projects")
@@ -89,8 +92,8 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       .select()
       .single();
 
-    if (error) return error;
-    return data;
+    if (error) return { success: false } satisfies ProjectResult;
+    return { success: true, data };
   };
 
   const createProjectMembers = async (patch: NewProjectMemberType) => {
@@ -101,12 +104,11 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     });
 
     if (!parseResult.success) {
-      console.error(
-        "Validation error in createProjectMember: ",
-        parseResult.error
-      );
-      return parseResult.error;
+      handleZodError(parseResult.error);
+
+      return { success: false } satisfies ProjectMembersResult;
     }
+
     const payload = parseResult.data;
     const { data, error } = await supabase
       .from("project_members")
@@ -114,8 +116,8 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       .select()
       .single();
 
-    if (error) return error;
-    return data;
+    if (error) return { success: false } satisfies ProjectMembersResult;
+    return { success: true, data };
   };
 
   const setCurrentProject = (projectId: CurrentProjectType): void => {

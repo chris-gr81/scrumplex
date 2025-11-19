@@ -1,4 +1,3 @@
-import { SquareX } from "lucide-react";
 import {
   Table,
   TableBody,
