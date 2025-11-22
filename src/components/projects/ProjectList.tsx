@@ -25,7 +25,12 @@ import { Button } from "../ui/button";
 export const ProjectList = () => {
   const [projects, setProjects] = useState<ProjectListType>([]);
   const { setActivePanel } = useDisplay();
-  const { project, getAllProjectsForUser, setCurrentProject } = useProject();
+  const {
+    project,
+    getAllProjectsForUser,
+    setCurrentProject,
+    updateCurrentProjectToDb,
+  } = useProject();
 
   useEffect(() => {
     (async () => {
@@ -53,6 +58,7 @@ export const ProjectList = () => {
 
   const handleRowClick = (projectId: string) => {
     setCurrentProject(projectId);
+    updateCurrentProjectToDb(projectId);
     toast["info"]("Aktives Projekt gewechselt");
   };
 
