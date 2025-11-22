@@ -37,7 +37,7 @@ import { sortStories } from "@/lib/sorts";
 
 export const ProductBacklogList = () => {
   const { setActivePanel } = useDisplay();
-  const { fetchStoriesForProject } = useProject();
+  const { fetchStoriesForProject, updateStory } = useProject();
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const [isAllOpen, setIsAllOpen] = useState(false);
   const [stories, setStories] = useState<StoryType[] | []>([]);
@@ -51,10 +51,18 @@ export const ProductBacklogList = () => {
 
   useEffect(() => {
     if (!stories.length) return;
-    const initialState = Object.fromEntries(
-      stories.map((story) => [story.id, false])
-    );
-    setOpenRows(initialState);
+
+    setOpenRows((prev) => {
+      const merged = { ...prev };
+
+      for (const s of stories) {
+        if (!(s.id in merged)) {
+          merged[s.id] = false;
+        }
+      }
+
+      return merged;
+    });
   }, [stories]);
 
   const toggleAllRowExpansion = () => {
@@ -73,6 +81,38 @@ export const ProductBacklogList = () => {
     if (targetId) {
       setOpenRows((prev) => ({ ...prev, [targetId]: !prev[targetId] }));
     }
+  };
+
+  const handleInvestClick = (
+    key: string,
+    story: StoryType,
+    isFullfilled: boolean
+  ) => {
+    console.log(key, isFullfilled);
+    const newStory = {
+      ...story,
+      invest: { ...story.invest, [key]: !isFullfilled },
+    };
+
+    const newStories = stories.map((item) =>
+      item.id === newStory.id ? newStory : item
+    );
+    setStories(newStories);
+    updateStory(newStory);
+  };
+
+  const handleDodClick = (index: number, story: StoryType) => {
+    const newDodList = story.definition_of_done.map((item, i) =>
+      i === index ? { ...item, done: !item.done } : item
+    );
+
+    const newStory = { ...story, definition_of_done: newDodList };
+
+    setStories((prev) =>
+      prev.map((s) => (s.id === newStory.id ? newStory : s))
+    );
+
+    updateStory(newStory);
   };
 
   return (
@@ -186,9 +226,19 @@ export const ProductBacklogList = () => {
                                     className="flex flex-row items-center gap-2"
                                   >
                                     {story.invest[key] ? (
-                                      <CircleCheck className="h-4 text-emerald-700" />
+                                      <CircleCheck
+                                        className="h-4 text-emerald-700 cursor-pointer"
+                                        onClick={() =>
+                                          handleInvestClick(key, story, true)
+                                        }
+                                      />
                                     ) : (
-                                      <CircleDashed className="h-4" />
+                                      <CircleDashed
+                                        className="h-4 cursor-pointer"
+                                        onClick={() =>
+                                          handleInvestClick(key, story, false)
+                                        }
+                                      />
                                     )}
                                     <span
                                       className={cn(
@@ -213,13 +263,22 @@ export const ProductBacklogList = () => {
                               Definition of done:
                             </p>
                             <ul className="list-disc list-inside pl-2">
-                              {story.definition_of_done.map((dod) => {
+                              {story.definition_of_done.map((dod, i) => {
                                 return (
-                                  <li className="flex flex-row gap-2 items-center">
+                                  <li
+                                    key={i}
+                                    className="flex flex-row gap-2 items-center"
+                                  >
                                     {dod.done ? (
-                                      <CircleCheck className="h-4 text-emerald-700" />
+                                      <CircleCheck
+                                        className="h-4 text-emerald-700"
+                                        onClick={() => handleDodClick(i, story)}
+                                      />
                                     ) : (
-                                      <CircleDashed className="h-4 text-foreground" />
+                                      <CircleDashed
+                                        className="h-4 text-foreground"
+                                        onClick={() => handleDodClick(i, story)}
+                                      />
                                     )}
                                     <span
                                       className={cn(
