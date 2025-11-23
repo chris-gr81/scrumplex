@@ -34,3 +34,4 @@ export const ProjectListSchema = z.array(
   })
 );
 export type ProjectListType = z.infer<typeof ProjectListSchema>;
+export type ProjectListItem = ProjectListType[number];

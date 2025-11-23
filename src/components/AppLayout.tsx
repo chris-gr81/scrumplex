@@ -34,7 +34,7 @@ export function AppLayout() {
             </div>
             <div
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-zinc-600 cursor-pointer"
-              onClick={() => setActivePanel({ type: "projectList" })}
+              onClick={() => setActivePanel({ type: "projectWorkspace" })}
             >
               <FolderKanban className="w-5 h-5 text-emerald-100" />
               <span>Projekte</span>

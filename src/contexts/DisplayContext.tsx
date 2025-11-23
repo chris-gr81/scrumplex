@@ -1,6 +1,6 @@
 import ProductBacklogList from "@/components/productBacklog/ProductBacklogList";
 import NewProject from "@/components/projects/NewProject";
-import ProjectList from "@/components/projects/ProjectList";
+import ProjectWorkspace from "@/components/projects/ProjectWorkspace";
 import UserStoryForm from "@/components/productBacklog/UserStoryForm";
 import { useContext, createContext, useState, type ReactNode } from "react";
 import type { StoryType } from "@/schemas";
@@ -9,7 +9,7 @@ import Dashboard from "@/components/dashboard/Dashboard";
 type PanelState =
   | { type: "dashboard" }
   | { type: "newProject" }
-  | { type: "projectList" }
+  | { type: "projectWorkspace" }
   | { type: "productBacklogList" }
   | { type: "userStory"; isEdit: boolean; payload?: StoryType };
 
@@ -33,8 +33,8 @@ export function DisplayProvider({ children }: { children: ReactNode }) {
         return <Dashboard />;
       case "newProject":
         return <NewProject />;
-      case "projectList":
-        return <ProjectList />;
+      case "projectWorkspace":
+        return <ProjectWorkspace />;
       case "productBacklogList":
         return <ProductBacklogList />;
       case "userStory":

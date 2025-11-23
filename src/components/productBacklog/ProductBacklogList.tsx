@@ -88,10 +88,17 @@ export const ProductBacklogList = () => {
     story: StoryType,
     isFullfilled: boolean
   ) => {
-    console.log(key, isFullfilled);
+    const rateKey = key.replace("_check", "_rate");
+    const newCheckValue = !isFullfilled;
+    const newRateValue = newCheckValue ? 100 : 0;
+
     const newStory = {
       ...story,
-      invest: { ...story.invest, [key]: !isFullfilled },
+      invest: {
+        ...story.invest,
+        [key]: newCheckValue,
+        [rateKey]: newRateValue,
+      },
     };
 
     const newStories = stories.map((item) =>

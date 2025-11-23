@@ -75,7 +75,7 @@ export default function NewProject() {
         'Das Projekt "' +
         resProject.data.name +
         '" wurde erfolgreich angelegt.';
-      setActivePanel({ type: "projectList" });
+      setActivePanel({ type: "projectWorkspace" });
       toast["success"](message);
     }
   };
@@ -93,7 +93,7 @@ export default function NewProject() {
           <SquareX
             className="cursor-pointer text-foreground/50 hover:text-foreground"
             onClick={() => {
-              setActivePanel({ type: "projectList" });
+              setActivePanel({ type: "projectWorkspace" });
             }}
           />
         </CardAction>
@@ -156,7 +156,7 @@ export default function NewProject() {
         <Button
           variant="outline"
           onClick={() => {
-            setActivePanel({ type: "projectList" });
+            setActivePanel({ type: "projectWorkspace" });
           }}
         >
           Verwerfen
