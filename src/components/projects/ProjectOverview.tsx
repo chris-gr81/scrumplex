@@ -11,14 +11,22 @@ import {
 } from "../ui/card";
 
 import { type ProjectListItem } from "@/schemas";
+import { CircleCheck, CircleDashed, RefreshCcw, Trash2 } from "lucide-react";
 
 interface ProjectOverviewProps {
   project: ProjectListItem | null;
+  toggleStatus: () => void;
 }
 
-export const ProjectOverview = ({ project }: ProjectOverviewProps) => {
+export const ProjectOverview = ({
+  project,
+  toggleStatus,
+}: ProjectOverviewProps) => {
   const { setActivePanel } = useDisplay();
 
+  const handleToggle = () => {
+    toggleStatus();
+  };
   return (
     <Card className="w-full">
       {!project ? (
@@ -54,7 +62,22 @@ export const ProjectOverview = ({ project }: ProjectOverviewProps) => {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="flex-row justify-end"></CardFooter>
+          <CardFooter className="flex-row justify-end gap-2">
+            <div onClick={handleToggle}>
+              <Button variant="ghost" size="sm" className="text-xs">
+                {project.finished ? <RefreshCcw /> : <CircleCheck />}
+                <span>
+                  {project.finished
+                    ? "Projekt reaktivieren"
+                    : "Projekt abschließen"}
+                </span>
+              </Button>
+            </div>
+            <Button variant="outline" size="sm" className="text-xs">
+              <Trash2 />
+              <span>Löschen</span>
+            </Button>
+          </CardFooter>
         </>
       )}
     </Card>

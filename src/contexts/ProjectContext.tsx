@@ -4,6 +4,7 @@ import {
   CurrentProjectSchema,
   NewProjectMemberSchema,
   NewProjectSchema,
+  UpdateProjectSchema,
   type CurrentProjectType,
   type NewProjectMemberType,
   type ProjectRow,
@@ -19,7 +20,7 @@ import {
 import { useAuth } from "./AuthContext";
 
 export type ProjectPatch = Partial<
-  Pick<ProjectRow, "name" | "goal" | "finished">
+  Pick<ProjectRow, "name" | "goal" | "finished" | "updated_at">
 >;
 type ProjectResult = { success: true; data: ProjectRow } | { success: false };
 type ProjectMembersResult =
@@ -41,6 +42,7 @@ type ProjectContextValue = {
   insertNewStory: (story: any) => Promise<any>;
   updateStory: (story: any) => Promise<any>;
   fetchStoriesForProject: () => Promise<any>;
+  updateProject: (patch: ProjectPatch) => Promise<ProjectResult>;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -78,6 +80,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       name: (patch.name ?? "").toString().trim(),
       goal: (patch.goal ?? "").toString().trim(),
       finished: patch.finished,
+      updated_at: new Date().toISOString(),
     });
 
     if (!parseResult.success) {
@@ -92,6 +95,30 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
       .select()
       .single();
 
+    if (error) return { success: false } satisfies ProjectResult;
+    return { success: true, data };
+  };
+
+  const updateProject = async (patch: ProjectPatch) => {
+    const parseResult = UpdateProjectSchema.safeParse({
+      name: (patch.name ?? "").toString().trim(),
+      goal: (patch.goal ?? "").toString().trim(),
+      finished: patch.finished,
+      updated_at: new Date().toISOString(),
+    });
+
+    if (!parseResult.success) {
+      handleZodError(parseResult.error);
+      return { success: false } satisfies ProjectResult;
+    }
+
+    const payload = parseResult.data;
+    const { data, error } = await supabase
+      .from("projects")
+      .update(payload)
+      .eq("id", project)
+      .select()
+      .single();
     if (error) return { success: false } satisfies ProjectResult;
     return { success: true, data };
   };
@@ -236,6 +263,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         insertNewStory,
         fetchStoriesForProject,
         updateStory,
+        updateProject,
       }}
     >
       {children}

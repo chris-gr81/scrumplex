@@ -9,6 +9,7 @@ import {
 export const ProjectSchema = z.object({
   id: idSchema,
   created_at: timeStampSchema,
+  updated_at: timeStampSchema,
   name: projectNameSchema,
   goal: projectGoalSchema,
   finished: z.boolean(),
@@ -21,6 +22,14 @@ export const NewProjectSchema = ProjectSchema.pick({
   name: true,
   goal: true,
   finished: true,
+  updated_at: true,
+});
+
+export const UpdateProjectSchema = z.object({
+  name: projectNameSchema.optional(),
+  goal: projectGoalSchema.optional(),
+  finished: z.boolean().optional(),
+  updated_at: timeStampSchema.optional(),
 });
 
 export type NewProjectData = z.infer<typeof NewProjectSchema>;

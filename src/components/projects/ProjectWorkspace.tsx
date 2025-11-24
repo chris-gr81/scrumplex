@@ -31,6 +31,7 @@ export const ProjectList = () => {
     getAllProjectsForUser,
     setCurrentProject,
     updateCurrentProjectToDb,
+    updateProject,
   } = useProject();
   const activeProjectData = projects.find((p) => p.id === project) || null;
 
@@ -62,6 +63,17 @@ export const ProjectList = () => {
     setCurrentProject(projectId);
     updateCurrentProjectToDb(projectId);
     toast["info"]("Aktives Projekt gewechselt");
+  };
+
+  const toggleStatus = () => {
+    const row = projects.find((p) => p.id === project);
+    console.log(row);
+    if (!row) return;
+    const updatedRow = { ...row, finished: !row.finished };
+
+    setProjects((prev) => prev.map((p) => (p.id === project ? updatedRow : p)));
+
+    updateProject(updatedRow);
   };
 
   return (
@@ -132,7 +144,10 @@ export const ProjectList = () => {
         </Card>
       </div>
       <div className="basis-1/3">
-        <ProjectOverview project={activeProjectData} />
+        <ProjectOverview
+          project={activeProjectData}
+          toggleStatus={toggleStatus}
+        />
       </div>
     </div>
   );
