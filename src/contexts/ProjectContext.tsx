@@ -28,21 +28,23 @@ type ProjectMembersResult =
   | { success: false };
 
 type ProjectContextValue = {
-  project: CurrentProjectType | null;
+  activeProject: ProjectRow | null;
+  projects: ProjectRow[] | null;
   createProject: (patch: ProjectPatch) => Promise<ProjectResult>;
   createProjectMembers: (
     patch: NewProjectMemberType
   ) => Promise<ProjectMembersResult>; // TODO ;)
-  setCurrentProject: (projectId: CurrentProjectType) => void;
+  setCurrentProject: (current: ProjectRow) => void;
   getCurrentProject: (
     currentId: CurrentProjectType
   ) => Promise<ProjectRow | null>;
-  updateCurrentProjectToDb: (currentId: string) => Promise<void>;
+  updateCurrentProjectInProfiles: (currentId: string) => Promise<void>;
   getAllProjectsForUser: () => any;
   insertNewStory: (story: any) => Promise<any>;
   updateStory: (story: any) => Promise<any>;
   fetchStoriesForProject: () => Promise<any>;
   updateProject: (patch: ProjectPatch) => Promise<ProjectResult>;
+  isActiveProjectFinished: () => boolean;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -50,22 +52,26 @@ const ProjectContext = createContext<ProjectContextValue | undefined>(
 );
 
 export function ProjectProvider({ children }: { children: ReactNode }) {
-  const [project, setProject] = useState<CurrentProjectType | null>(null);
+  const [activeProject, setActiveProject] = useState<ProjectRow | null>(null);
+  const [projects] = useState<ProjectRow[] | null>([]);
   const { auth } = useAuth();
 
   // initial loader
   useEffect(() => {
     if (auth.status !== "ready") return;
     (async () => {
-      const res = await loadCurrentProject(auth.profile.id);
-
-      setProject(res ? res.current_project : null);
+      const current = await loadCurrentProject(auth.profile.id);
+      if (!current) return;
+      const row = await getCurrentProject(current.current_project);
+      setActiveProject(row ? row : null);
     })();
   }, []);
 
   // updater vor current project in auth profile
-  const updateCurrentProjectToDb = async (currentId: string): Promise<void> => {
-    console.log("Updating current project to db (try):", project);
+  const updateCurrentProjectInProfiles = async (
+    currentId: string
+  ): Promise<void> => {
+    console.log("Updating current project to db (try):", activeProject?.id);
     if (auth.status !== "ready") return;
     const { error } = await supabase
       .from("profiles")
@@ -116,7 +122,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase
       .from("projects")
       .update(payload)
-      .eq("id", project)
+      .eq("id", activeProject?.id)
       .select()
       .single();
     if (error) return { success: false } satisfies ProjectResult;
@@ -147,8 +153,8 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     return { success: true, data };
   };
 
-  const setCurrentProject = (projectId: CurrentProjectType): void => {
-    setProject(projectId);
+  const setCurrentProject = (current: ProjectRow): void => {
+    setActiveProject(current);
   };
 
   const getCurrentProject = async (
@@ -175,7 +181,8 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase
       .from("projects")
       .select("*, project_members(*, profiles(first_name, last_name))")
-      .eq("project_members.profile_id", auth.profile.id);
+      .eq("project_members.profile_id", auth.profile.id)
+      .order("updated_at", { ascending: false });
 
     if (error) {
       console.error("Reading Projects by Owner Error: ", error);
@@ -239,7 +246,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase
       .from("userstories")
       .select("*, invest(*)")
-      .eq("project_id", project)
+      .eq("project_id", activeProject?.id)
       .order("updated_at", { ascending: false });
 
     if (error) {
@@ -250,20 +257,26 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     return data;
   };
 
+  const isActiveProjectFinished = (): boolean => {
+    return activeProject?.finished ?? false;
+  };
+
   return (
     <ProjectContext.Provider
       value={{
-        project,
+        projects,
+        activeProject,
         createProject,
         createProjectMembers,
         setCurrentProject,
         getCurrentProject,
-        updateCurrentProjectToDb,
+        updateCurrentProjectInProfiles,
         getAllProjectsForUser,
         insertNewStory,
         fetchStoriesForProject,
         updateStory,
         updateProject,
+        isActiveProjectFinished,
       }}
     >
       {children}

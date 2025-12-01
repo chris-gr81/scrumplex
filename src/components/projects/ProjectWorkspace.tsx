@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from "../ui/card";
 import { useEffect, useState } from "react";
-import type { ProjectListType } from "@/schemas";
-import { formatDateToEU } from "@/lib/utils";
+import type { ProjectListType, ProjectRow } from "@/schemas";
+import { cn, formatDateToEU } from "@/lib/utils";
 import { useDisplay } from "@/contexts/DisplayContext";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -22,18 +22,19 @@ import {
   FtabRow,
 } from "../ui/ftab";
 import ProjectOverview from "./ProjectOverview";
+import { sortProjects } from "@/lib/sorts";
+import { CircleCheck, CircleDashed } from "lucide-react";
 
 export const ProjectList = () => {
   const [projects, setProjects] = useState<ProjectListType>([]);
   const { setActivePanel } = useDisplay();
   const {
-    project,
+    activeProject,
     getAllProjectsForUser,
     setCurrentProject,
-    updateCurrentProjectToDb,
+    updateCurrentProjectInProfiles,
     updateProject,
   } = useProject();
-  const activeProjectData = projects.find((p) => p.id === project) || null;
 
   useEffect(() => {
     (async () => {
@@ -51,27 +52,36 @@ export const ProjectList = () => {
           finished: r.finished,
           owner_id: r.owner_id,
           ownerName: productOwnerName,
+          updated_at: r.updated_at,
         };
       });
 
-      setProjects(projectsWithOwnerName || []);
+      setProjects(sortProjects(projectsWithOwnerName) || []);
     })();
   }, []);
   const pList = projects;
 
-  const handleRowClick = (projectId: string) => {
-    setCurrentProject(projectId);
-    updateCurrentProjectToDb(projectId);
+  const handleRowClick = (current: ProjectRow) => {
+    setCurrentProject(current);
+    updateCurrentProjectInProfiles(current.id);
     toast["info"]("Aktives Projekt gewechselt");
   };
 
   const toggleStatus = () => {
-    const row = projects.find((p) => p.id === project);
+    if (!activeProject) return;
+    const row = projects.find((p) => p.id === activeProject.id);
     console.log(row);
     if (!row) return;
-    const updatedRow = { ...row, finished: !row.finished };
+    const updatedRow = {
+      ...row,
+      finished: !row.finished,
+      updated_at: new Date().toISOString(),
+    };
 
-    setProjects((prev) => prev.map((p) => (p.id === project ? updatedRow : p)));
+    const newPList = projects.map((p) =>
+      p.id === activeProject.id ? updatedRow : p
+    );
+    setProjects(sortProjects(newPList));
 
     updateProject(updatedRow);
   };
@@ -103,9 +113,12 @@ export const ProjectList = () => {
             <Ftab>
               <FtabHeader>
                 <FtabRow>
-                  <FtabHead className="truncate basis-[50%]">Name</FtabHead>
+                  <FtabHead className="truncate basis-[35%]">Name</FtabHead>
 
-                  <FtabHead className="truncate basis-[15%]">Angelegt</FtabHead>
+                  <FtabHead className="truncate basis-[15%]">Erstellt</FtabHead>
+                  <FtabHead className="truncate basis-[15%]">
+                    Letzte Änderung
+                  </FtabHead>
                   <FtabHead className="truncate basis-[20%]">
                     Product Owner
                   </FtabHead>
@@ -113,41 +126,67 @@ export const ProjectList = () => {
                 </FtabRow>
               </FtabHeader>
               <FtabBody>
-                {pList.map((p) => (
-                  <FtabRow
-                    className={
-                      p.id === project
-                        ? "bg-muted-foreground/30 cursor-pointer hover:bg-muted-foreground/10"
-                        : "cursor-pointer hover:bg-muted-foreground/10 "
-                    }
-                    key={p.id}
-                    onClick={() => handleRowClick(p.id)}
-                  >
-                    <FtabCell className="truncate basis-[50%]">
-                      {p.name}
-                    </FtabCell>
+                {pList.map((p) => {
+                  const textDesign = p.finished
+                    ? "line-through text-muted-foreground"
+                    : "text-foreground";
 
-                    <FtabCell className="truncate basis-[15%]">
-                      {formatDateToEU(p.created_at, false)}
-                    </FtabCell>
-                    <FtabCell className="truncate basis-[20%]">
-                      {p.ownerName}
-                    </FtabCell>
-                    <FtabCell className="truncate basis-[15%]">
-                      {p.finished ? "abgeschlossen" : "offen"}
-                    </FtabCell>
-                  </FtabRow>
-                ))}
+                  return (
+                    <FtabRow
+                      className={cn(
+                        p.id === activeProject?.id
+                          ? "bg-muted-foreground/30 cursor-pointer hover:bg-muted-foreground/10"
+                          : "cursor-pointer hover:bg-muted-foreground/10"
+                      )}
+                      key={p.id}
+                      onClick={() => handleRowClick(p)}
+                    >
+                      <FtabCell
+                        className={cn("truncate basis-[35%]", textDesign)}
+                      >
+                        {p.name}
+                      </FtabCell>
+
+                      <FtabCell
+                        className={cn("truncate basis-[15%]", textDesign)}
+                      >
+                        {formatDateToEU(p.created_at, false)}
+                      </FtabCell>
+                      <FtabCell
+                        className={cn("truncate basis-[15%]", textDesign)}
+                      >
+                        {formatDateToEU(p.updated_at, true)}
+                      </FtabCell>
+                      <FtabCell
+                        className={cn("truncate basis-[20%]", textDesign)}
+                      >
+                        {p.ownerName}
+                      </FtabCell>
+                      <FtabCell
+                        className={cn("truncate basis-[15%]", textDesign)}
+                      >
+                        {p.finished ? (
+                          <div className="flex flex-row items-center gap-1">
+                            <CircleDashed className="h-4" />
+                            Inaktiv
+                          </div>
+                        ) : (
+                          <div className="flex flex-row items-center gap-1">
+                            <CircleCheck className="h-4 text-emerald-700" />
+                            Aktiv
+                          </div>
+                        )}
+                      </FtabCell>
+                    </FtabRow>
+                  );
+                })}
               </FtabBody>
             </Ftab>
           </CardContent>
         </Card>
       </div>
       <div className="basis-1/3">
-        <ProjectOverview
-          project={activeProjectData}
-          toggleStatus={toggleStatus}
-        />
+        <ProjectOverview project={activeProject} toggleStatus={toggleStatus} />
       </div>
     </div>
   );

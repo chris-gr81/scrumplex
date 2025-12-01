@@ -47,9 +47,8 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
   const { setActivePanel } = useDisplay();
   const [story, setStory] = useState<StoryType>(payload ?? StoryDefault);
   const [dod, setDod] = useState("");
-  const { project, insertNewStory, updateStory } = useProject();
+  const { activeProject, insertNewStory, updateStory } = useProject();
 
-  console.log(payload);
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -99,14 +98,14 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
   };
 
   const handleSubmitNew = async () => {
-    if (!project) return;
+    if (!activeProject) return;
 
     const res = StorySchema.safeParse(checkAndSetDefaults(story));
     if (!res.success) {
       console.log(res.error);
       return;
     }
-    const prepStory = prepareStoryForDB(res.data, project);
+    const prepStory = prepareStoryForDB(res.data, activeProject.id);
 
     try {
       const result = await insertNewStory(prepStory);
@@ -118,7 +117,7 @@ export const UserStoryForm = (props: UserStoryFormProps) => {
   };
 
   const handleSubmitUpdate = async () => {
-    if (!project) return;
+    if (!activeProject) return;
     story.updated_at = new Date().toISOString();
 
     const res = StorySchema.safeParse(story);

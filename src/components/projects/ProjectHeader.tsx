@@ -8,17 +8,16 @@ import {
 } from "../ui/card";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import type { ProjectRow } from "@/schemas";
+import { formatDateToEU } from "@/lib/utils";
 
 interface ProjectHeaderProps {
-  title: string;
-  description: string;
-  date?: string;
-  isProject: boolean;
+  activeProject: ProjectRow | null;
 }
 
-export const ProjectHeader = (props: ProjectHeaderProps) => {
+export const ProjectHeader = ({ activeProject }: ProjectHeaderProps) => {
   const [isGoalVisible, setIsGoalVisible] = useState(false);
-  const { title, description, date, isProject } = props;
+  console.log("Active project in header:", activeProject);
 
   const toogleGoalVisibility = () => {
     setIsGoalVisible(!isGoalVisible);
@@ -26,17 +25,23 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        {isProject ? (
-          // true-case: is a project
-          <CardDescription>Angelegt am: {date ? date : ""}</CardDescription>
-        ) : (
-          // false-case: is not a project
-          <CardDescription>{description}</CardDescription>
-        )}
+        <CardTitle>
+          {activeProject?.name
+            ? activeProject.name
+            : "Kein aktives Projekt ausgwehält"}
+        </CardTitle>
+
+        <CardDescription>
+          {activeProject
+            ? `Angelegt am: ${formatDateToEU(
+                activeProject.created_at ?? "",
+                false
+              )}`
+            : "Bitte wählen Sie ein Projekt aus, oder legen Sie ein neues Projekt an"}
+        </CardDescription>
 
         <CardAction>
-          {isProject ? (
+          {activeProject ? (
             // true-case: is a project
             <Button variant="outline" size="sm" onClick={toogleGoalVisibility}>
               <span className="text-xs">
@@ -49,10 +54,10 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
           null}
         </CardAction>
       </CardHeader>
-      {isGoalVisible && isProject ? (
+      {isGoalVisible && activeProject ? (
         <CardContent>
           <p className="font-normal text-sm text-muted-foreground">
-            &bdquo;{description}&ldquo;
+            &bdquo;{activeProject?.goal ?? ""}&ldquo;
           </p>
         </CardContent>
       ) : (

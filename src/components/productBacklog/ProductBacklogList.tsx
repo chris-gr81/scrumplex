@@ -37,7 +37,8 @@ import { sortStories } from "@/lib/sorts";
 
 export const ProductBacklogList = () => {
   const { setActivePanel } = useDisplay();
-  const { fetchStoriesForProject, updateStory } = useProject();
+  const { fetchStoriesForProject, updateStory, isActiveProjectFinished } =
+    useProject();
   const [openRows, setOpenRows] = useState<Record<string, boolean>>({});
   const [isAllOpen, setIsAllOpen] = useState(false);
   const [stories, setStories] = useState<StoryType[] | []>([]);
@@ -88,6 +89,7 @@ export const ProductBacklogList = () => {
     story: StoryType,
     isFullfilled: boolean
   ) => {
+    if (isActiveProjectFinished()) return;
     const rateKey = key.replace("_check", "_rate");
     const newCheckValue = !isFullfilled;
     const newRateValue = newCheckValue ? 100 : 0;
@@ -109,6 +111,7 @@ export const ProductBacklogList = () => {
   };
 
   const handleDodClick = (index: number, story: StoryType) => {
+    if (isActiveProjectFinished()) return;
     const newDodList = story.definition_of_done.map((item, i) =>
       i === index ? { ...item, done: !item.done } : item
     );
@@ -127,20 +130,31 @@ export const ProductBacklogList = () => {
       <CardHeader>
         <CardTitle>Product Backlog</CardTitle>
         <CardDescription>
-          Das Product Backlog listet alle Userstories auf. Die einzelnen
-          Elemente könne vom Product Owner bearbeitet und prioriest werden.
+          {isActiveProjectFinished() ? (
+            <span className="text-red-700/70">
+              Projekt ist inaktiv. Anzeige nur im Lesemdodus. Reaktivieren Sie
+              das Projekt, um es zu bearbeiten.
+            </span>
+          ) : (
+            <span>
+              Das Product Backlog listet alle Userstories auf. Die einzelnen
+              Elemente könne vom Product Owner bearbeitet und prioriest werden.
+            </span>
+          )}
         </CardDescription>
-        <CardAction>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              setActivePanel({ type: "userStory", isEdit: false });
-            }}
-          >
-            <span className="text-xs">Story anlegen</span>
-          </Button>
-        </CardAction>
+        {isActiveProjectFinished() ? null : (
+          <CardAction>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setActivePanel({ type: "userStory", isEdit: false });
+              }}
+            >
+              <span className="text-xs">Story anlegen</span>
+            </Button>
+          </CardAction>
+        )}
       </CardHeader>
       <CardContent>
         <Ftab>
@@ -234,14 +248,22 @@ export const ProductBacklogList = () => {
                                   >
                                     {story.invest[key] ? (
                                       <CircleCheck
-                                        className="h-4 text-emerald-700 cursor-pointer"
+                                        className={
+                                          isActiveProjectFinished()
+                                            ? "h-4 text-emerald-700"
+                                            : "h-4 text-emerald-700 cursor-pointerr"
+                                        }
                                         onClick={() =>
                                           handleInvestClick(key, story, true)
                                         }
                                       />
                                     ) : (
                                       <CircleDashed
-                                        className="h-4 cursor-pointer"
+                                        className={
+                                          isActiveProjectFinished()
+                                            ? "h-4"
+                                            : "h-4 cursor-pointer"
+                                        }
                                         onClick={() =>
                                           handleInvestClick(key, story, false)
                                         }
@@ -379,16 +401,18 @@ export const ProductBacklogList = () => {
                       : ""}
                   </FtabCell>
                   <FtabCell className="truncate basis-[5%]">
-                    <Pencil
-                      onClick={() => {
-                        setActivePanel({
-                          type: "userStory",
-                          isEdit: true,
-                          payload: story,
-                        });
-                      }}
-                      className="h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground"
-                    />
+                    {isActiveProjectFinished() ? null : (
+                      <Pencil
+                        onClick={() => {
+                          setActivePanel({
+                            type: "userStory",
+                            isEdit: true,
+                            payload: story,
+                          });
+                        }}
+                        className="h-4 w-4 cursor-pointer text-foreground/50 hover:text-foreground"
+                      />
+                    )}
                   </FtabCell>
                 </FtabRow>
               );

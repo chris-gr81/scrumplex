@@ -11,7 +11,7 @@ import {
 } from "../ui/card";
 
 import { type ProjectListItem } from "@/schemas";
-import { CircleCheck, CircleDashed, RefreshCcw, Trash2 } from "lucide-react";
+import { CircleCheck, RefreshCcw, Trash2 } from "lucide-react";
 
 interface ProjectOverviewProps {
   project: ProjectListItem | null;

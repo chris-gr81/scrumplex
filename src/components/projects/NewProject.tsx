@@ -30,11 +30,11 @@ import { SquareX } from "lucide-react";
 
 export default function NewProject() {
   const {
-    project,
+    activeProject,
     createProject,
     createProjectMembers,
     setCurrentProject,
-    updateCurrentProjectToDb,
+    updateCurrentProjectInProfiles,
   } = useProject();
   const { auth, roles } = useAuth();
   const [projectName, setProjectName] = useState("");
@@ -67,9 +67,10 @@ export default function NewProject() {
     });
 
     if (resProjectMembers && resProject) {
-      setCurrentProject(resProject.data.id);
-      await updateCurrentProjectToDb(resProject.data.id);
-      if (project) console.log("Sucess, here is the project", project);
+      setCurrentProject(resProject.data);
+      await updateCurrentProjectInProfiles(resProject.data.id);
+      if (activeProject)
+        console.log("Sucess, here is the project", activeProject);
 
       const message =
         'Das Projekt "' +

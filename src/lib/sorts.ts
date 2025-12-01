@@ -1,4 +1,4 @@
-import { type StoryType } from "@/schemas";
+import { type ProjectListType, type StoryType } from "@/schemas";
 
 const PRIORITY_ORDER: string[] = [
   "must",
@@ -26,5 +26,20 @@ export const sortStories = (stories: StoryType[]) => {
     if (aInactive && !bInactive) return 1;
     if (!aInactive && bInactive) return -1;
     return 0; // keeps original priority sort order
+  });
+};
+
+export const sortProjects = (projects: ProjectListType) => {
+  return [...projects].sort((a, b) => {
+    // 1) ZUERST nach finished sortieren (offen zuerst)
+    if (a.finished !== b.finished) {
+      return a.finished ? 1 : -1; // false kommt vor true
+    }
+
+    // 2) Wenn beide gleicher finished-Status → updated_at DESC
+    const dateA = a.updated_at ? new Date(a.updated_at).getTime() : 0;
+    const dateB = b.updated_at ? new Date(b.updated_at).getTime() : 0;
+
+    return dateB - dateA;
   });
 };
