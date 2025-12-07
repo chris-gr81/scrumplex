@@ -45,6 +45,7 @@ type ProjectContextValue = {
   fetchStoriesForProject: () => Promise<any>;
   updateProject: (patch: ProjectPatch) => Promise<ProjectResult>;
   isActiveProjectFinished: () => boolean;
+  deleteCurrentProject: (currentId: string) => Promise<boolean>;
 };
 
 const ProjectContext = createContext<ProjectContextValue | undefined>(
@@ -261,6 +262,23 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
     return activeProject?.finished ?? false;
   };
 
+  const deleteCurrentProject = async (currentID: string) => {
+    if (!currentID || auth.status !== "ready") return false;
+    const { error } = await supabase
+      .from("projects")
+      .delete()
+      .eq("id", currentID)
+      .eq("owner_id", auth.profile.id);
+    if (error) {
+      console.error("Deleting project failed", error);
+      return false;
+    }
+    if (activeProject?.id === currentID) {
+      setActiveProject(null);
+    }
+    return true;
+  };
+
   return (
     <ProjectContext.Provider
       value={{
@@ -277,6 +295,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         updateStory,
         updateProject,
         isActiveProjectFinished,
+        deleteCurrentProject,
       }}
     >
       {children}

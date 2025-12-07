@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { ProjectListType, ProjectRow } from "@/schemas";
 import { cn, formatDateToEU } from "@/lib/utils";
 import { useDisplay } from "@/contexts/DisplayContext";
@@ -36,29 +36,31 @@ export const ProjectList = () => {
     updateProject,
   } = useProject();
 
+  const loadProjects = useCallback(async () => {
+    const res: ProjectListType | any = await getAllProjectsForUser();
+    if (!res) return;
+
+    const projectsWithOwnerName = res.map((r: any) => {
+      const member = r.project_members[0].profiles;
+      const productOwnerName = `${member.first_name} ${member.last_name}`;
+      return {
+        id: r.id,
+        name: r.name,
+        goal: r.goal,
+        created_at: r.created_at,
+        finished: r.finished,
+        owner_id: r.owner_id,
+        ownerName: productOwnerName,
+        updated_at: r.updated_at,
+      };
+    });
+
+    setProjects(sortProjects(projectsWithOwnerName) || []);
+  }, [getAllProjectsForUser]);
+
   useEffect(() => {
-    (async () => {
-      const res: ProjectListType | any = await getAllProjectsForUser();
-      if (!res) return;
-
-      const projectsWithOwnerName = res.map((r: any) => {
-        const member = r.project_members[0].profiles;
-        const productOwnerName = `${member.first_name} ${member.last_name}`;
-        return {
-          id: r.id,
-          name: r.name,
-          goal: r.goal,
-          created_at: r.created_at,
-          finished: r.finished,
-          owner_id: r.owner_id,
-          ownerName: productOwnerName,
-          updated_at: r.updated_at,
-        };
-      });
-
-      setProjects(sortProjects(projectsWithOwnerName) || []);
-    })();
-  }, []);
+    loadProjects();
+  }, [loadProjects]);
   const pList = projects;
 
   const handleRowClick = (current: ProjectRow) => {
@@ -186,7 +188,11 @@ export const ProjectList = () => {
         </Card>
       </div>
       <div className="basis-1/3">
-        <ProjectOverview project={activeProject} toggleStatus={toggleStatus} />
+        <ProjectOverview
+          project={activeProject}
+          toggleStatus={toggleStatus}
+          onDeleted={loadProjects}
+        />
       </div>
     </div>
   );

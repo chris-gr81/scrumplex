@@ -12,21 +12,44 @@ import {
 
 import { type ProjectListItem } from "@/schemas";
 import { CircleCheck, RefreshCcw, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogFooter,
+  AlertDialogHeader,
+} from "../ui/alert-dialog";
+import { useProject } from "@/contexts/ProjectContext";
 
 interface ProjectOverviewProps {
   project: ProjectListItem | null;
   toggleStatus: () => void;
+  onDeleted?: () => Promise<void> | void;
 }
 
 export const ProjectOverview = ({
   project,
   toggleStatus,
+  onDeleted,
 }: ProjectOverviewProps) => {
   const { setActivePanel } = useDisplay();
+  const { deleteCurrentProject } = useProject();
 
   const handleToggle = () => {
     toggleStatus();
   };
+  const handleDelete = async () => {
+    if (!project) return;
+    const success = await deleteCurrentProject(project.id);
+    if (success) {
+      await onDeleted?.();
+    }
+  };
+
   return (
     <Card className="w-full">
       {!project ? (
@@ -73,10 +96,32 @@ export const ProjectOverview = ({
                 </span>
               </Button>
             </div>
-            <Button variant="outline" size="sm" className="text-xs">
-              <Trash2 />
-              <span>Löschen</span>
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" size="sm" className="text-xs">
+                  <Trash2 />
+                  <span>Löschen</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Möchten Sie das Projekt wirklich löschen?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Das Löschen eines Projekts kann nicht rückgängig gemacht
+                    werden. Das Projekt, sowie alle zugehörigen Userstories
+                    werden endgültit gelöscht.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel> Abbrechen</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDelete}>
+                    Löschen
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardFooter>
         </>
       )}
